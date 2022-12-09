@@ -1,0 +1,72 @@
+﻿using System;
+using System.Diagnostics;
+
+namespace M1nforum.Web.Services.Entities
+{
+	public interface IEntity
+	{
+		ulong Id { get; set; }
+		DateTime CreatedOn { get; set; }
+		string CreatedBy { get; set; }
+		DateTime UpdatedOn { get; set; }
+		string UpdatedBy { get; set; }
+	}
+
+	public class Entity : IEntity
+	{
+		public ulong Id { get; set; }
+		public DateTime CreatedOn { get; set; }
+		public DateTime UpdatedOn { get; set; }
+		public string CreatedBy { get; set; }
+		public string UpdatedBy { get; set; }
+	}
+
+	public class Domain : Entity
+	{
+		public string Name { get; set; }
+		public string Title { get; set; }
+		public string Description { get; set; }
+	}
+
+	public class Category : Entity
+	{
+		public ulong DomainId { get; set; }
+		public string Name { get; set; }
+		public string Description { get; set; }
+		public string HeaderMessage { get; set; }
+		public int TopicCountCache { get; set; }
+		public bool IsPrivate { get; set; }
+		public bool IsReadOnly { get; set; }
+		public bool IsRestricted { get; set; }
+		public DateTime? ArchivedAt { get; set; }
+	}
+
+	public class Topic : Entity
+	{
+		public ulong DomainId { get; set; }
+		public ulong Categoryid { get; set; }
+		public ulong UserId { get; set; }
+		public string Title { get; set; }
+		public string Content { get; set; }
+		public bool IsSticky { get; set; }
+		public bool IsReadOnly { get; set; }
+		public int CommentCountCache { get; set; }
+		public int ViewCountCache { get; set; }
+		public DateTime ActivityAt { get; set; }
+		public DateTime? ArchivedAt { get; set; }
+		public string UserDisplayName { get; set; }
+	}
+
+	public class Comment : Entity
+	{
+		public ulong DomainId { get; set; }
+		public ulong Categoryid { get; set; }
+		public ulong TopicId { get; set; }
+		public ulong UserId { get; set; }
+		public string UserDisplayName { get; set; }
+		public int CommentCountCache { get; set; } // todo:  ?
+		public string Content { get; set; }
+		public bool IsSticky { get; set; }
+		public DateTime? ArchivedAt { get; set; }
+	}
+}

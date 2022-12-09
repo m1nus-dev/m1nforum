@@ -1,0 +1,122 @@
+﻿<!-- template_document_header -->
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="m1n">
+	<meta name="generator" content="m1nforum">
+	<title><!-- [[Title]] --></title>
+	<link rel="stylesheet" href="/css/<!-- [[CSSFilename]] -->" />
+
+</head>
+<body>
+	<nav class="nav" tabindex="-1" onclick="this.focus()">
+		<div class="container">
+			<a class="pagename current" href="/"><!-- [[SiteName]] --></a>
+			<a href="/">Home</a>
+		</div>
+	</nav>
+<!-- /template_document_header -->
+<!-- template_page_header -->
+	<div class="container">
+		<h1 class="mb0"><!-- [[Header]] --></h1>
+		<p class="mt0"><!-- [[Subheader]] --></p>
+	</div>
+<!-- /template_page_header -->
+<!-- template_categories_header -->
+	<div class="container">
+		<h2>Categories</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Topics</th>
+				</tr>
+			</thead>
+			<tbody>
+<!-- /template_categories_header -->
+<!-- template_categories_row -->
+				<tr>
+					<td><a href="/categories/<!-- [[Id]] -->"><!-- [[Name]] --></a></td>
+					<td><!-- [[Description]] --></td>
+					<td><!-- [[TopicCountCache]] --></td>
+				</tr>
+<!-- /template_categories_row -->
+<!-- template_categories_footer -->
+			</tbody>
+		</table>
+	</div>
+<!-- /template_categories_footer -->
+
+
+
+<!-- template_topics_header -->
+	<div class="container">
+		<h2><a href="/categories/"><!-- [[CategoryName]] --></a> \ Topics</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>Title</th>
+					<th>Content</th>
+					<th>Comment Count</th>
+					<th>View Count</th>
+				</tr>
+			</thead>
+			<tbody>
+<!-- /template_topics_header -->
+<!-- template_topics_row -->
+				<tr>
+					<td><a href="/categories/<!-- [[CategoryId]] -->/topics/<!-- [[Id]] -->"><!-- [[Title]] --></a></td>
+					<td><!-- [[Content]] --></td>
+					<td><!-- [[CommentCountCache]] --></td>
+					<td><!-- [[ViewCountCache]] --></td>
+				</tr>
+<!-- /template_topics_row -->
+<!-- template_topics_footer -->
+			</tbody>
+		</table>
+	</div>
+<!-- /template_topics_footer -->
+
+<!-- template_comments_header -->
+	<div class="container">
+		<h2><a href="/categories/"><!-- [[Category.Name]] --></a> \ <a href="/categories/<!-- [[Category.Id]] -->"><!-- [[Topic.Title]] --></a> \ Comments</h2>
+		<div class="container">
+			<p>
+				<strong>Topic Title:  </strong><!-- [[Topic.Title]] -->
+			</p>
+			<p>
+				<strong>Topic Content:  </strong><!-- [[Topic.Content]] -->
+			</p>
+		</div>
+		<table class="table">
+			<tbody>
+<!-- /template_comments_header -->
+<!-- template_comments_row -->
+				<tr>
+					<td>
+						<p><strong>Comment By: <!-- [[UserDisplayName]] --></strong> <!-- [[Content]] -->
+					</td>
+				</tr>
+				<!-- /template_comments_row -->
+				<!-- template_comments_footer -->
+			</tbody>
+		</table>
+	</div>
+<!-- /template_comments_footer -->
+
+<!-- template_document_footer -->
+	<div class="mt1 bg-gray p1">
+		<div class="container"><!-- [[Title]] --> | generated on <!-- [[GeneratedOn]] --></div>
+	</div>
+	<script>
+	</script>
+</body>
+</html>
+<!-- /template_document_footer -->
+	
+
+
