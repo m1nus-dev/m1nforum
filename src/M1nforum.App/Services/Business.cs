@@ -48,6 +48,11 @@ namespace M1nforum.Web.Services
 			return _dataAccess.GetTopicById(domainId, categoryId, topicId);
 		}
 
+		internal Topic GetTopicByIdUpdateViewCount(ulong domainId, ulong categoryId, ulong topicId)
+		{
+			return _dataAccess.GetTopicByIdUpdateViewCount(domainId, categoryId, topicId);
+		}
+
 		internal List<Comment> GetCommentsByTopicId(ulong domainId, ulong categoryId, ulong topicId)
 		{
 			return _dataAccess.GetCommentsByTopicId(domainId, categoryId, topicId);

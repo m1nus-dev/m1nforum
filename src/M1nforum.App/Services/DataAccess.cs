@@ -68,6 +68,19 @@ namespace M1nforum.Web.Services
 			return topic;
 		}
 
+		internal Topic GetTopicByIdUpdateViewCount(ulong domainId, ulong categoryId, ulong topicId)
+		{
+			var topic = GetTopicById(domainId, categoryId, topicId);
+
+			if (topic != null)
+			{
+				topic.ViewCountCache++;
+				_topicRepository.Update(topic);
+			}
+
+			return topic;
+		}
+
 		internal List<Comment> GetCommentsByTopicId(ulong domainId, ulong categoryId, ulong topicId)
 		{
 			var comments = _commentRepository

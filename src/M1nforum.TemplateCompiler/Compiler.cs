@@ -58,7 +58,7 @@ using System.Threading.Tasks;
 
 namespace M1nforum.Web.Templates
 { 
-	public static class Views
+	public static partial class Views
 	{
 " + csOutput + @"
 	}

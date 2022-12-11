@@ -552,25 +552,6 @@
     <UserDisplayName>Mr. the</UserDisplayName>
   </Topic>
   <Topic>
-    <Id>2212102216240485216</Id>
-    <CreatedOn>2022-12-10T22:16:24.0485351Z</CreatedOn>
-    <UpdatedOn>2022-12-10T22:16:26.9248423Z</UpdatedOn>
-    <CreatedBy>system</CreatedBy>
-    <UpdatedBy>system</UpdatedBy>
-    <DomainId>2212102216237825051</DomainId>
-    <Categoryid>2212102216238449361</Categoryid>
-    <UserId>4193903752732466899</UserId>
-    <Title>Topic.Title - going</Title>
-    <Content>Topic.Content - the overall</Content>
-    <IsSticky>false</IsSticky>
-    <IsReadOnly>false</IsReadOnly>
-    <CommentCountCache>10</CommentCountCache>
-    <ViewCountCache>0</ViewCountCache>
-    <ActivityAt>2022-12-10T22:16:24.0484832Z</ActivityAt>
-    <ArchivedAt xsi:nil="true" />
-    <UserDisplayName>Mr. beta</UserDisplayName>
-  </Topic>
-  <Topic>
     <Id>2212102216240571339</Id>
     <CreatedOn>2022-12-10T22:16:24.057148Z</CreatedOn>
     <UpdatedOn>2022-12-10T22:16:27.0284814Z</UpdatedOn>
@@ -911,44 +892,6 @@
     <ActivityAt>2022-12-10T22:16:24.1791767Z</ActivityAt>
     <ArchivedAt xsi:nil="true" />
     <UserDisplayName>Mr. new</UserDisplayName>
-  </Topic>
-  <Topic>
-    <Id>2212102216241869719</Id>
-    <CreatedOn>2022-12-10T22:16:24.1869898Z</CreatedOn>
-    <UpdatedOn>2022-12-10T22:16:28.9632533Z</UpdatedOn>
-    <CreatedBy>system</CreatedBy>
-    <UpdatedBy>system</UpdatedBy>
-    <DomainId>2212102216237825051</DomainId>
-    <Categoryid>2212102216238476024</Categoryid>
-    <UserId>5150856153880419779</UserId>
-    <Title>Topic.Title - the a</Title>
-    <Content>Topic.Content - end to overall</Content>
-    <IsSticky>false</IsSticky>
-    <IsReadOnly>false</IsReadOnly>
-    <CommentCountCache>10</CommentCountCache>
-    <ViewCountCache>0</ViewCountCache>
-    <ActivityAt>2022-12-10T22:16:24.1869253Z</ActivityAt>
-    <ArchivedAt xsi:nil="true" />
-    <UserDisplayName>Mr. from</UserDisplayName>
-  </Topic>
-  <Topic>
-    <Id>2212102216241940921</Id>
-    <CreatedOn>2022-12-10T22:16:24.1941099Z</CreatedOn>
-    <UpdatedOn>2022-12-10T22:16:29.082696Z</UpdatedOn>
-    <CreatedBy>system</CreatedBy>
-    <UpdatedBy>system</UpdatedBy>
-    <DomainId>2212102216237825051</DomainId>
-    <Categoryid>2212102216238476024</Categoryid>
-    <UserId>6203060749727204918</UserId>
-    <Title>Topic.Title - added</Title>
-    <Content>Topic.Content - day, win-win new foster overall</Content>
-    <IsSticky>false</IsSticky>
-    <IsReadOnly>false</IsReadOnly>
-    <CommentCountCache>10</CommentCountCache>
-    <ViewCountCache>0</ViewCountCache>
-    <ActivityAt>2022-12-10T22:16:24.1940418Z</ActivityAt>
-    <ArchivedAt xsi:nil="true" />
-    <UserDisplayName>Mr. the</UserDisplayName>
   </Topic>
   <Topic>
     <Id>2212102216242010563</Id>
@@ -1899,5 +1842,62 @@
     <ActivityAt>2022-12-10T22:16:24.5417536Z</ActivityAt>
     <ArchivedAt xsi:nil="true" />
     <UserDisplayName>Mr. solution</UserDisplayName>
+  </Topic>
+  <Topic>
+    <Id>2212102216240485216</Id>
+    <CreatedOn>2022-12-10T22:16:24.0485351Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:26.9248423Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Categoryid>2212102216238449361</Categoryid>
+    <UserId>4193903752732466899</UserId>
+    <Title>Topic.Title - going</Title>
+    <Content>Topic.Content - the overall</Content>
+    <IsSticky>false</IsSticky>
+    <IsReadOnly>false</IsReadOnly>
+    <CommentCountCache>10</CommentCountCache>
+    <ViewCountCache>3</ViewCountCache>
+    <ActivityAt>2022-12-10T22:16:24.0484832Z</ActivityAt>
+    <ArchivedAt xsi:nil="true" />
+    <UserDisplayName>Mr. beta</UserDisplayName>
+  </Topic>
+  <Topic>
+    <Id>2212102216241869719</Id>
+    <CreatedOn>2022-12-10T22:16:24.1869898Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:28.9632533Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Categoryid>2212102216238476024</Categoryid>
+    <UserId>5150856153880419779</UserId>
+    <Title>Topic.Title - the a</Title>
+    <Content>Topic.Content - end to overall</Content>
+    <IsSticky>false</IsSticky>
+    <IsReadOnly>false</IsReadOnly>
+    <CommentCountCache>10</CommentCountCache>
+    <ViewCountCache>4</ViewCountCache>
+    <ActivityAt>2022-12-10T22:16:24.1869253Z</ActivityAt>
+    <ArchivedAt xsi:nil="true" />
+    <UserDisplayName>Mr. from</UserDisplayName>
+  </Topic>
+  <Topic>
+    <Id>2212102216241940921</Id>
+    <CreatedOn>2022-12-10T22:16:24.1941099Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:29.082696Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Categoryid>2212102216238476024</Categoryid>
+    <UserId>6203060749727204918</UserId>
+    <Title>Topic.Title - added</Title>
+    <Content>Topic.Content - day, win-win new foster overall</Content>
+    <IsSticky>false</IsSticky>
+    <IsReadOnly>false</IsReadOnly>
+    <CommentCountCache>10</CommentCountCache>
+    <ViewCountCache>8</ViewCountCache>
+    <ActivityAt>2022-12-10T22:16:24.1940418Z</ActivityAt>
+    <ArchivedAt xsi:nil="true" />
+    <UserDisplayName>Mr. the</UserDisplayName>
   </Topic>
 </ArrayOfTopic>

@@ -18,7 +18,7 @@ There is a focus on minimalism and speed
 - The data is from an xml file on disk but it is all cached.  
 - There is no dependency on a database.
 - There is use of caching headers in every http handler method.
-- The css is from the smallest css library I could find and its awesome [mincss.com](https://mincss.com/)
+- The css is from the smallest css library I could find and its awesome [mincss.com](https://mincss.com/).  Should consider classless instead.  Maybe with 2 or 3 helpers.
 - There is no javascript.
 - MapGet is used - no razorpages or mvc or razor.
 - Everything is minimal and fast

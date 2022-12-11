@@ -9,6 +9,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using M1nforum.Web.Handlers;
+using M1nforum.Web.Infrastructure.Exceptions;
 
 namespace M1nforum.Web
 {
@@ -58,10 +59,21 @@ namespace M1nforum.Web
 				{
 					await next(httpContext);
 				}
+				catch (PageNotFoundException pnfe)
+				{
+					// todo:  since we are writing directly to the body stream, there is no way to do good error pages once the views start, right?
+
+					if (Cache.DebuggingEnabled)
+					{
+						await httpContext.Response.WriteAsync("Page not found - " + pnfe.Message);
+						return;
+					}
+
+					await httpContext.Response.WriteAsync("Page Not Found");
+
+				}
 				catch (Exception exception)
 				{
-					// todo:  since we are writing directly to the body stream, there is no way to do good error pages, right?
-
 					if (Cache.DebuggingEnabled)
 					{
 						await httpContext.Response.WriteAsync(exception.Message);

@@ -25,94 +25,86 @@
 	</div>
 <!-- /template_PageHeader -->
 
-<!-- template_CategoriesHeader -->
+
+<!-- template_Categories -->
 	<div class="container">
 		<h2>Categories</h2>
 		<table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
-					<th>Description</th>
 					<th>Topics</th>
+					<th>Last Post</th>
 				</tr>
 			</thead>
 			<tbody>
-<!-- /template_CategoriesHeader -->
-
-<!-- template_CategoriesRow -->
+				<% for (var counter = 0; counter < viewModel.Categories.Count; counter++) {
+					var category = viewModel.Categories[counter]; %>				
 				<tr>
-					<td><a href="/categories/<%= viewModel.Category.Id.ToString() %>"><%= viewModel.Category.Name %></a></td>
-					<td><%= viewModel.Category.Description %></td>
-					<td><%= viewModel.Category.TopicCountCache.ToString() %></td>
+					<td><a href="/categories/<%= category.Id.ToString() %>"><%= category.Name %></a><br /><%= category.Description %></td>
+					<td><%= category.TopicCountCache.ToString() %></td>
+					<td>todo:  last post	</td>
 				</tr>
-<!-- /template_CategoriesRow -->
-
-<!-- template_CategoriesFooter -->
+				<% } %>
 			</tbody>
 		</table>
 	</div>
-<!-- /template_CategoriesFooter -->
+<!-- /template_Categories -->
 
 
-<!-- template_TopicsHeader -->
+<!-- template_Topics -->
 	<div class="container">
 		<h2><a href="/categories/"><%= viewModel.Category.Name %></a> \ Topics</h2>
 		<table class="table">
 			<thead>
 				<tr>
-					<th>Title</th>
-					<th>Content</th>
-					<th>Comment Count</th>
-					<th>View Count</th>
+					<th>Topic</th>
+					<th>Comments</th>
+					<th>Views</th>
+					<th>Last Post</th>
 				</tr>
 			</thead>
 			<tbody>
-<!-- /template_TopicsHeader -->
-
-<!-- template_TopicsRow -->
+				<% for (var counter = 0; counter < viewModel.Topics.Count; counter++) {
+				var topic = viewModel.Topics[counter]; %>
 				<tr>
-					<td><a href="/categories/<%= viewModel.Category.Id.ToString() %>/topics/<%= viewModel.Topic.Id.ToString() %>"><%= viewModel.Topic.Title %></a></td>
-					<td><%= viewModel.Topic.Content %></td>
-					<td><%= viewModel.Topic.CommentCountCache.ToString() %></td>
-					<td><%= viewModel.Topic.ViewCountCache.ToString() %></td>
+					<td><a href="/categories/<%= viewModel.Category.Id.ToString() %>/topics/<%= topic.Id.ToString() %>"><%= topic.Title %></a><br />By <%= topic.UserDisplayName %> on <%= topic.CreatedOn.ToString("MM/dd/yyyy, hh:mm tt") %> </td>
+					<td><%= topic.CommentCountCache.ToString() %></td>
+					<td><%= topic.ViewCountCache.ToString() %></td>
+					<td>todo:  last post</td>
 				</tr>
-<!-- /template_TopicsRow -->
-
-<!-- template_TopicsFooter -->
+				<% } %>
 			</tbody>
 		</table>
 	</div>
-<!-- /template_TopicsFooter -->
+<!-- /template_Topics -->
 
 
-<!-- template_CommentsHeader -->
+<!-- template_Comments -->
 	<div class="container">
-		<h2><a href="/categories/"><%= viewModel.Category.Name %></a> \ <a href="/categories/<%= viewModel.Category_Id %>"><%= viewModel.Topic_Title %></a> \ Comments</h2>
+		<h2><a href="/categories/"><%= viewModel.Category.Name %></a> \ <a href="/categories/<%= viewModel.Category.Id.ToString() %>"><%= viewModel.Topic.Title %></a> \ Comments</h2>
 		<div class="container">
 			<p>
-				<strong>Topic Title:  </strong><%= viewModel.Topic_Title %>
+				<strong><%= viewModel.Topic.Title %></strong><br /><%= viewModel.Topic.CreatedOn.ToString("MM/dd/yyyy, hh:mm tt") %>
 			</p>
 			<p>
-				<strong>Topic Content:  </strong><%= viewModel.Topic_Content %>
+				<%= viewModel.Topic.Content %>
 			</p>
 		</div>
 		<table class="table">
 			<tbody>
-<!-- /template_CommentsHeader -->
-
-<!-- template_CommentsRow -->
+				<% for (var counter = 0; counter < viewModel.Comments.Count; counter++) {
+				var comment = viewModel.Comments[counter]; %>
 				<tr>
 					<td>
-						<p><strong>Comment By: <%= viewModel.Comment.UserDisplayName %></strong> <%= viewModel.Comment.Content %>
+						<p><strong>Comment By: <%= comment.UserDisplayName %></strong> <%= comment.Content %>
 					</td>
 				</tr>
-<!-- /template_CommentsRow -->
-
-<!-- template_CommentsFooter -->
+				<% } %>
 			</tbody>
 		</table>
 	</div>
-<!-- /template_CommentsFooter -->
+<!-- /template_Comments -->
 
 
 <!-- template_DocumentFooter -->

@@ -1,11 +1,12 @@
 ﻿using M1nforum.Web.Infrastructure;
-using System.IO;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using M1nforum.Web.Services.Entities;
 using M1nforum.Web.Templates;
+using System.Collections.Generic;
+using M1nforum.Web.Infrastructure.Exceptions;
 
 namespace M1nforum.Web.Handlers
 {
@@ -15,11 +16,11 @@ namespace M1nforum.Web.Handlers
         {
             // context
             var domain = httpContext.Get<Domain>("Domain");
-            // user, _ := r.Context().Value(CtxUserKey).(*models.User)
+			// user, _ := r.Context().Value(CtxUserKey).(*models.User)
 
-            // model
-            var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId);
-            var topics = Program.Cache.Business.GetTopicsByCategoryId(domain.Id, category.Id);
+			// model
+			var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
+			var topics = Program.Cache.Business.GetTopicsByCategoryId(domain.Id, category.Id) ?? new List<Topic>();
 
 			// todo:  check for nulls
 
@@ -48,21 +49,11 @@ namespace M1nforum.Web.Handlers
 					Subheader = domain.Description
 				});
 
-				await body.WriteTopicsHeader(new
+				await body.WriteTopics(new
 				{
 					Category = category, 
+					Topics = topics
 				});
-
-                foreach (var topic in topics)
-                {
-					await body.WriteTopicsRow(new
-					{
-						Category = category,
-						Topic = topic
-					});
-				}
-
-				await body.WriteTopicsFooter();
 
 				await body.WriteDocumentFooter(new
 				{

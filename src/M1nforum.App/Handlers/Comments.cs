@@ -1,11 +1,12 @@
 ﻿using M1nforum.Web.Infrastructure;
-using System.IO;
 using System;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using M1nforum.Web.Services.Entities;
 using M1nforum.Web.Templates;
+using System.Collections.Generic;
+using M1nforum.Web.Infrastructure.Exceptions;
 
 namespace M1nforum.Web.Handlers
 {
@@ -15,17 +16,15 @@ namespace M1nforum.Web.Handlers
         {
             // context
             var domain = httpContext.Get<Domain>("Domain");
-            // user, _ := r.Context().Value(CtxUserKey).(*models.User)
+			// user, _ := r.Context().Value(CtxUserKey).(*models.User)
 
-            // data
-            var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId);
-            var topic = Program.Cache.Business.GetTopicById(domain.Id, category.Id, topicId);
-            var comments = Program.Cache.Business.GetCommentsByTopicId(domain.Id, category.Id, topic.Id);
+			// data
+			var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
+			var topic = Program.Cache.Business.GetTopicByIdUpdateViewCount(domain.Id, category.Id, topicId) ?? throw new PageNotFoundException("topic");
+			var comments = Program.Cache.Business.GetCommentsByTopicId(domain.Id, category.Id, topic.Id) ?? new List<Comment>();
 
-            // todo:  check for nulls
-
-            // cache
-            if (!Program.Cache.DebuggingEnabled && httpContext.CacheContent(comments.Max(c => c.UpdatedOn))) // todo:  this is probably the wrong sort
+			// cache
+			if (!Program.Cache.DebuggingEnabled && httpContext.CacheContent(comments.Max(c => c.UpdatedOn))) // todo:  this is probably the wrong sort
             {
                 return;
             }
@@ -49,25 +48,12 @@ namespace M1nforum.Web.Handlers
                     Subheader = domain.Description
                 });
 
-                await body.WriteCommentsHeader(new
+                await body.WriteComments(new
                 {
-					//	variables.Add("Category.Name", viewModel.Category.Name);
 					Category = category,
-                    Category_Id =  category.Id.ToString(), 
-                    Topic_Id = topic.Id.ToString(),
-                    Topic_Title = topic.Title,
-                    Topic_Content = topic.Content
+                    Topic = topic,
+                    Comments = comments
                 });
-
-                foreach (var comment in comments)
-                {
-                    await body.WriteCommentsRow(new
-                    {
-                        Comment = comment
-					});
-                }
-
-                await body.WriteCommentsFooter();
 
                 await body.WriteDocumentFooter(new
 				{
