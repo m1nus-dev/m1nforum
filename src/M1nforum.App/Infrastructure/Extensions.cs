@@ -4,7 +4,7 @@ using System.IO;
 
 namespace M1nforum.Web.Infrastructure
 {
-	public static class Extensions
+	public static class HttpExtensions
 	{
 		public static T Get<T>(this HttpContext httpContext, string key)
 		{
@@ -19,7 +19,8 @@ namespace M1nforum.Web.Infrastructure
 			return new DateTime(date.Ticks - (date.Ticks % resolution), date.Kind);
 		}
 
-		public static string GetFileTimestamp(this string path)
+		// todo:  make this generic
+		public static string GetCSSFileTimestamp(this string path)
 		{
 			var timestamp = Program.Cache.CSSTimestamp ?? (Program.Cache.CSSTimestamp = File.GetLastWriteTimeUtc(path).ToString("yyyyMMddHHmmss"));
 			return timestamp;
@@ -60,6 +61,5 @@ namespace M1nforum.Web.Infrastructure
 
 			return new Guid(guidArray);
 		}
-
 	}
 }

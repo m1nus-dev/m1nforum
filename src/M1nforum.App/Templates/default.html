@@ -1,4 +1,4 @@
-﻿<!-- template_document_header -->
+﻿<!-- template_DocumentHeader -->
 <!doctype html>
 <html lang="en">
 <head>
@@ -7,25 +7,28 @@
 	<meta name="description" content="">
 	<meta name="author" content="m1n">
 	<meta name="generator" content="m1nforum">
-	<title><!-- [[Title]] --></title>
-	<link rel="stylesheet" href="/css/<!-- [[CSSFilename]] -->" />
+	<title><%= viewModel.Title %></title>
+	<link rel="stylesheet" href="/css/<%= viewModel.CSSFilename %>" />
 
 </head>
 <body>
 	<nav class="nav" tabindex="-1" onclick="this.focus()">
 		<div class="container">
-			<a class="pagename current" href="/"><!-- [[SiteName]] --></a>
+			<a class="pagename current" href="/"><%= viewModel.SiteName %></a>
 			<a href="/">Home</a>
 		</div>
 	</nav>
-<!-- /template_document_header -->
-<!-- template_page_header -->
+<!-- /template_DocumentHeader -->
+
+
+<!-- template_PageHeader -->
 	<div class="container">
-		<h1 class="mb0"><!-- [[Header]] --></h1>
-		<p class="mt0"><!-- [[Subheader]] --></p>
+		<h1 class="mb0"><%= viewModel.Header %></h1>
+		<p class="mt0"><%= viewModel.Subheader %></p>
 	</div>
-<!-- /template_page_header -->
-<!-- template_categories_header -->
+<!-- /template_PageHeader -->
+
+<!-- template_CategoriesHeader -->
 	<div class="container">
 		<h2>Categories</h2>
 		<table class="table">
@@ -37,25 +40,26 @@
 				</tr>
 			</thead>
 			<tbody>
-<!-- /template_categories_header -->
-<!-- template_categories_row -->
+<!-- /template_CategoriesHeader -->
+
+<!-- template_CategoriesRow -->
 				<tr>
-					<td><a href="/categories/<!-- [[Id]] -->"><!-- [[Name]] --></a></td>
-					<td><!-- [[Description]] --></td>
-					<td><!-- [[TopicCountCache]] --></td>
+					<td><a href="/categories/<%= viewModel.Category.Id.ToString() %>"><%= viewModel.Category.Name %></a></td>
+					<td><%= viewModel.Category.Description %></td>
+					<td><%= viewModel.Category.TopicCountCache.ToString() %></td>
 				</tr>
-<!-- /template_categories_row -->
-<!-- template_categories_footer -->
+<!-- /template_CategoriesRow -->
+
+<!-- template_CategoriesFooter -->
 			</tbody>
 		</table>
 	</div>
-<!-- /template_categories_footer -->
+<!-- /template_CategoriesFooter -->
 
 
-
-<!-- template_topics_header -->
+<!-- template_TopicsHeader -->
 	<div class="container">
-		<h2><a href="/categories/"><!-- [[CategoryName]] --></a> \ Topics</h2>
+		<h2><a href="/categories/"><%= viewModel.Category.Name %></a> \ Topics</h2>
 		<table class="table">
 			<thead>
 				<tr>
@@ -66,57 +70,63 @@
 				</tr>
 			</thead>
 			<tbody>
-<!-- /template_topics_header -->
-<!-- template_topics_row -->
+<!-- /template_TopicsHeader -->
+
+<!-- template_TopicsRow -->
 				<tr>
-					<td><a href="/categories/<!-- [[CategoryId]] -->/topics/<!-- [[Id]] -->"><!-- [[Title]] --></a></td>
-					<td><!-- [[Content]] --></td>
-					<td><!-- [[CommentCountCache]] --></td>
-					<td><!-- [[ViewCountCache]] --></td>
+					<td><a href="/categories/<%= viewModel.Category.Id.ToString() %>/topics/<%= viewModel.Topic.Id.ToString() %>"><%= viewModel.Topic.Title %></a></td>
+					<td><%= viewModel.Topic.Content %></td>
+					<td><%= viewModel.Topic.CommentCountCache.ToString() %></td>
+					<td><%= viewModel.Topic.ViewCountCache.ToString() %></td>
 				</tr>
-<!-- /template_topics_row -->
-<!-- template_topics_footer -->
+<!-- /template_TopicsRow -->
+
+<!-- template_TopicsFooter -->
 			</tbody>
 		</table>
 	</div>
-<!-- /template_topics_footer -->
+<!-- /template_TopicsFooter -->
 
-<!-- template_comments_header -->
+
+<!-- template_CommentsHeader -->
 	<div class="container">
-		<h2><a href="/categories/"><!-- [[Category.Name]] --></a> \ <a href="/categories/<!-- [[Category.Id]] -->"><!-- [[Topic.Title]] --></a> \ Comments</h2>
+		<h2><a href="/categories/"><%= viewModel.Category.Name %></a> \ <a href="/categories/<%= viewModel.Category_Id %>"><%= viewModel.Topic_Title %></a> \ Comments</h2>
 		<div class="container">
 			<p>
-				<strong>Topic Title:  </strong><!-- [[Topic.Title]] -->
+				<strong>Topic Title:  </strong><%= viewModel.Topic_Title %>
 			</p>
 			<p>
-				<strong>Topic Content:  </strong><!-- [[Topic.Content]] -->
+				<strong>Topic Content:  </strong><%= viewModel.Topic_Content %>
 			</p>
 		</div>
 		<table class="table">
 			<tbody>
-<!-- /template_comments_header -->
-<!-- template_comments_row -->
+<!-- /template_CommentsHeader -->
+
+<!-- template_CommentsRow -->
 				<tr>
 					<td>
-						<p><strong>Comment By: <!-- [[UserDisplayName]] --></strong> <!-- [[Content]] -->
+						<p><strong>Comment By: <%= viewModel.Comment.UserDisplayName %></strong> <%= viewModel.Comment.Content %>
 					</td>
 				</tr>
-				<!-- /template_comments_row -->
-				<!-- template_comments_footer -->
+<!-- /template_CommentsRow -->
+
+<!-- template_CommentsFooter -->
 			</tbody>
 		</table>
 	</div>
-<!-- /template_comments_footer -->
+<!-- /template_CommentsFooter -->
 
-<!-- template_document_footer -->
+
+<!-- template_DocumentFooter -->
 	<div class="mt1 bg-gray p1">
-		<div class="container"><!-- [[Title]] --> | generated on <!-- [[GeneratedOn]] --></div>
+		<div class="container"><%= viewModel.Title %> | generated on <%= viewModel.GeneratedOn %></div>
 	</div>
 	<script>
 	</script>
 </body>
 </html>
-<!-- /template_document_footer -->
+<!-- /template_DocumentFooter -->
 	
 
 

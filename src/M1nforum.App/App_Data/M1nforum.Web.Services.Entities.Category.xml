@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfCategory xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Category>
+    <Id>2212102216238383367</Id>
+    <CreatedOn>2022-12-10T22:16:23.8383621Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8383621Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - ensure</Name>
+    <Description>Category.Description - with proactive immersion approaches</Description>
+    <HeaderMessage>Category.HeaderMessage - high</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>true</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238442979</Id>
+    <CreatedOn>2022-12-10T22:16:23.8443125Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8443125Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - via</Name>
+    <Description>Category.Description - offshoring</Description>
+    <HeaderMessage>Category.HeaderMessage - cloud</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>false</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238449361</Id>
+    <CreatedOn>2022-12-10T22:16:23.8449434Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8449434Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - empowerment table</Name>
+    <Description>Category.Description - clickthroughs the beta</Description>
+    <HeaderMessage>Category.HeaderMessage - added</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>false</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238469655</Id>
+    <CreatedOn>2022-12-10T22:16:23.8469757Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8469757Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - the</Name>
+    <Description>Category.Description - on</Description>
+    <HeaderMessage>Category.HeaderMessage - workplace</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>true</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238476024</Id>
+    <CreatedOn>2022-12-10T22:16:23.8476076Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8476076Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - activity</Name>
+    <Description>Category.Description - foster</Description>
+    <HeaderMessage>Category.HeaderMessage - the to</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>false</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238528280</Id>
+    <CreatedOn>2022-12-10T22:16:23.8528432Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8528432Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - to proposition</Name>
+    <Description>Category.Description - information content clickthroughs</Description>
+    <HeaderMessage>Category.HeaderMessage - value</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>false</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238535900</Id>
+    <CreatedOn>2022-12-10T22:16:23.8535983Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8535983Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - focusing</Name>
+    <Description>Category.Description - clickthroughs beta</Description>
+    <HeaderMessage>Category.HeaderMessage - proposition provide</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>true</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238542050</Id>
+    <CreatedOn>2022-12-10T22:16:23.8542116Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8542116Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - offshoring</Name>
+    <Description>Category.Description - world new</Description>
+    <HeaderMessage>Category.HeaderMessage - with</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>false</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238592629</Id>
+    <CreatedOn>2022-12-10T22:16:23.8592755Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8592755Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - touchpoints</Name>
+    <Description>Category.Description - in</Description>
+    <HeaderMessage>Category.HeaderMessage - highway added</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>false</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+  <Category>
+    <Id>2212102216238599144</Id>
+    <CreatedOn>2022-12-10T22:16:23.8599195Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:23.8599195Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Name>Category.Name - strategy leverage</Name>
+    <Description>Category.Description - the for low agile</Description>
+    <HeaderMessage>Category.HeaderMessage - X to</HeaderMessage>
+    <TopicCountCache>10</TopicCountCache>
+    <IsPrivate>true</IsPrivate>
+    <IsReadOnly>false</IsReadOnly>
+    <IsRestricted>false</IsRestricted>
+    <ArchivedAt xsi:nil="true" />
+  </Category>
+</ArrayOfCategory>

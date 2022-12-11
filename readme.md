@@ -8,9 +8,10 @@ M1nforum is a fun exercise - nothing more.
 
 ~~There is a live version on the free tier in azure here:  [minforum.azurewebsites.net](https://m1nforum.azurewebsites.net/).  This is running on the F1 app service plan so who knows how long it will be up and available.  I'm curious to see what you get with the free tier in Azure. (60 CPU minutes / day)~~
 
-It't broken.  I'm sure it has something to do with writing data to the local file system.  I'll take a look soon.
+Azure website is broken.  I'll take a look soon.
 
 There is a focus on minimalism and speed
+- Custom view engine compiles html to c# at build time
 - The custom view engine writes strings directly to the body stream.
 - The data is from an xml file on disk but it is all cached.  
 - There is no dependency on a database.
@@ -19,7 +20,7 @@ There is a focus on minimalism and speed
 - There is no javascript.
 - MapGet is used - no razorpages or mvc or razor.
 - Everything is minimal and fast
-- Lots of things are done the manual/old school way.  For example, use of httpContext.
+- Lots of things are done the manual/old school way.  For example, use of httpContext, custom view engine, xml data store.  There are better, tested libraries for all of this functionality.
 
 It is not finished.  
 - No write capability - cant create any content via the UI yet
@@ -31,6 +32,16 @@ It is not finished.
 - No tests
 
 You get the idea - I was messing around and had a blast.  Feel free to ignore.
+
+### Data store
+
+The data is stored in xml files on disk.  The data is cached in memory for fast reads.
+
+### View Engine
+
+The console app is a view compiler.  It compiles the html templates into c# using the [John Resig Micro-Templating Pattern](https://johnresig.com/blog/javascript-micro-templating/), but in c#.
+
+This view engine is not the most fun developer experience.  To rebuilt the view you have to rebuild the app.  And, errors are tedious to find.  I think they are fast, though.  Keep the views simple and it is easier.
 
 ## Getting Started
 

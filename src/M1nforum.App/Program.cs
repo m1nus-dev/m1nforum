@@ -10,6 +10,7 @@ using M1nforum.Web.Services.Repositories;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using M1nforum.Web.Handlers;
 
 namespace M1nforum.Web
 {
@@ -88,10 +89,10 @@ namespace M1nforum.Web
 				await next(httpContext);
 			});
 
-			app.MapGet("/", async (httpContext) => await new Web.Features.Home.Browse().Get(httpContext));
-			app.MapGet("/categories", async (httpContext) => await new Web.Features.Categories.Browse().Get(httpContext));
-			app.MapGet("/categories/{categoryId}", async (HttpContext httpContext, ulong categoryId) => await new Web.Features.Topics.Browse().Get(httpContext, categoryId));
-			app.MapGet("/categories/{categoryId}/topics/{topicId}", async (HttpContext httpContext, ulong categoryId, ulong topicId) => await new Web.Features.Comments.Browse().Get(httpContext, categoryId, topicId));
+			app.MapGet("/", async (httpContext) => await new Home().Get(httpContext));
+			app.MapGet("/categories", async (httpContext) => await new Categories().Get(httpContext));
+			app.MapGet("/categories/{categoryId}", async (HttpContext httpContext, ulong categoryId) => await new Topics().Get(httpContext, categoryId));
+			app.MapGet("/categories/{categoryId}/topics/{topicId}", async (HttpContext httpContext, ulong categoryId, ulong topicId) => await new Comments().Get(httpContext, categoryId, topicId));
 
 			app.Run();
 		}
