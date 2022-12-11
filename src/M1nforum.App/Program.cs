@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Server.Kestrel.Core;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using M1nforum.Web.Infrastructure;
 using M1nforum.Web.Services;
@@ -35,6 +33,7 @@ namespace M1nforum.Web
 				new XmlRepository<Topic>());
 			Cache.Business = new Business(dataAccess);
 
+			// todo:  move this to environment variable
 			Cache.DebuggingEnabled = true;
 
 			var app = builder.Build();
@@ -61,6 +60,8 @@ namespace M1nforum.Web
 				}
 				catch (Exception exception)
 				{
+					// todo:  since we are writing directly to the body stream, there is no way to do good error pages, right?
+
 					if (Cache.DebuggingEnabled)
 					{
 						await httpContext.Response.WriteAsync(exception.Message);

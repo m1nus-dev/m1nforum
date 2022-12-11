@@ -27,7 +27,7 @@ namespace M1nforum.Web.Handlers
 			}
 
 			// response
-			await using (var body = new StreamWriter(httpContext.Response.Body))
+			await using (var body = await httpContext.StartHtmlResponse())
 			{
 				await body.WriteDocumentHeader(new
 				{
@@ -65,6 +65,46 @@ namespace M1nforum.Web.Handlers
 					GeneratedOn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")
 				});
 			}
+
+
+			//await using (var body = await httpContext.StartHtmlResponse())
+			//{
+			//	await body.WriteDocumentHeader(new
+			//	{
+			//		SiteName = domain.Title,
+			//		Title = "Categories - " + domain.Title,
+			//		CSSFilename = Program.Cache.DebuggingEnabled ?
+			//			"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
+			//			"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp()
+			//	});
+
+			//	await body.WritePageHeader(new
+			//	{
+			//		Title = "Categories - " + domain.Title,
+			//		Header = domain.Title,
+			//		Subheader = domain.Description
+			//	});
+
+			//	await body.WriteCategoriesHeader();
+
+			//	// todo:  dont show archived?
+
+			//	foreach (var category in categories)
+			//	{
+			//		await body.WriteCategoriesRow(new
+			//		{
+			//			Category = category
+			//		});
+			//	}
+
+			//	await body.WriteCategoriesFooter();
+
+			//	await body.WriteDocumentFooter(new
+			//	{
+			//		domain.Title,
+			//		GeneratedOn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")
+			//	});
+			//}
 		}
 	}
 }

@@ -15,16 +15,13 @@ namespace M1nforum.Web.Templates
 <head>
 	<meta charset=""utf-8"">
 	<meta name=""viewport"" content=""width=device-width, initial-scale=1, shrink-to-fit=no"">
-	<meta name=""description"" content="""">
-	<meta name=""author"" content=""m1n"">
-	<meta name=""generator"" content=""m1nforum"">
+	<meta name=""description"" content=""M1nforum example site"">
 	<title>");
 await streamWriter.WriteAsync(viewModel.Title);
 await streamWriter.WriteAsync(@"</title>
 	<link rel=""stylesheet"" href=""/css/");
 await streamWriter.WriteAsync(viewModel.CSSFilename);
 await streamWriter.WriteAsync(@""" />
-
 </head>
 <body>
 	<nav class=""nav"" tabindex=""-1"" onclick=""this.focus()"">

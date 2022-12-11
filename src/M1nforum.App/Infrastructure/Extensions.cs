@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace M1nforum.Web.Infrastructure
 {
@@ -9,6 +10,23 @@ namespace M1nforum.Web.Infrastructure
 		public static T Get<T>(this HttpContext httpContext, string key)
 		{
 			return (T)httpContext.Items[key];
+		}
+
+		// todo:  this helper automatically respond 200 - make generic
+		public async static Task<StreamWriter> StartResponse(this HttpContext httpContext, string contentType)
+		{
+			var streamWriter = new StreamWriter(httpContext.Response.Body);
+
+			// await streamWriter.WriteAsync("content-type", contentType);
+			httpContext.Response.StatusCode = 200;
+			httpContext.Response.Headers.Append("Content-Type", contentType);
+
+			return streamWriter;
+		}
+
+		public static async Task<StreamWriter> StartHtmlResponse(this HttpContext httpContext)
+		{
+			return await httpContext.StartResponse("text/html");
 		}
 	}
 
