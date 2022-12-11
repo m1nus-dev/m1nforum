@@ -6,7 +6,9 @@ M1nforum: a play project in the disguise of an oldschool forum.  This is not pro
 
 M1nforum is a fun exercise - nothing more.  
 
-~~There is a live version on the free tier in azure here:  [minforum.azurewebsites.net](https://m1nforum.azurewebsites.net/).  This is running on the F1 app service plan so who knows how long it will be up and available.  I'm curious to see what you get with the free tier in Azure. (60 CPU minutes / day)~~
+There is a live version on the free tier in azure here:  [minforum.azurewebsites.net](https://m1nforum.azurewebsites.net/).  This is running on the F1 app service plan so who knows how long it will be up and available.  I'm curious to see what you get with the free tier in Azure. (60 CPU minutes / day).  And, since its a windows host and all the data is in memory, I am sure it is memory starved.  Once it loads, I am sure it will be fast.  :)
+
+There is also a problem with the seed function.  I'm not sure what it is, but its not consistent.
 
 Azure website is broken.  I'll take a look soon.
 
