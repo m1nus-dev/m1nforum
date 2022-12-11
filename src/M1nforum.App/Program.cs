@@ -22,9 +22,6 @@ namespace M1nforum.Web
 		{
 			var builder = WebApplication.CreateBuilder(args);
 
-			// todo:  this is some bs that I dont know why started.
-			builder.Services.Configure<KestrelServerOptions>(options => options.AllowSynchronousIO = true);
-
 			await Program.Seed();
 
 			// setup services instances - this is similar to Services.AddTransient

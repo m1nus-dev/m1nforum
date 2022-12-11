@@ -30,8 +30,8 @@ namespace M1nforum.Web.Handlers
                 return;
             }
 
-            // response
-            using (var body = new StreamWriter(httpContext.Response.Body))
+			// response
+			await using (var body = new StreamWriter(httpContext.Response.Body))
             {
                 await body.WriteDocumentHeader(new
                 {
