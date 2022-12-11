@@ -10,8 +10,6 @@ There is a live version on the free tier in azure here:  [minforum.azurewebsites
 
 There is also a problem with the seed function.  I'm not sure what it is, but its not consistent.
 
-Azure website is broken.  I'll take a look soon.
-
 There is a focus on minimalism and speed
 - Custom view engine compiles html to c# at build time
 - The custom view engine writes strings directly to the body stream.
