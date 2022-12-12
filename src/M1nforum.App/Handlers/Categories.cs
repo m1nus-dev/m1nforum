@@ -16,6 +16,7 @@ namespace M1nforum.Web.Handlers
 		{
 			// model
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
 			var categories = Program.Cache.Business.GetCategoriesByDomainId(domain.Id) ?? new List<Category>();
 
 			// cache - do not cache if debugging is enabled - caching is difficult.  The data may not have changed but the css changed and this would cache that bad css. It is a trade off and inperfect.
@@ -29,6 +30,7 @@ namespace M1nforum.Web.Handlers
 			{
 				await body.WriteDocumentHeader(new
 				{
+					User = user,
 					SiteName = domain.Title,
 					Title = "Categories - " + domain.Title,
 					CSSFilename = Program.Cache.DebuggingEnabled ?
@@ -36,12 +38,13 @@ namespace M1nforum.Web.Handlers
 						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(), 
 					Header = domain.Title,
 					Subheader = domain.Description,
-					FlashMessage = httpContext.ReadFlashMessage()
+					FlashMessage = httpContext.ReadFlashMessage() 
 				});
 
 				// todo:  dont show archived?
 				await body.WriteCategories(new
 				{
+					User = user,
 					Categories = categories
 				});
 

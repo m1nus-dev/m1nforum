@@ -1,5 +1,6 @@
 ﻿using M1nforum.Web.Services.Entities;
 using M1nforum.Web.Services.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -106,6 +107,13 @@ namespace M1nforum.Web.Services
 			_userRepository.Update(user);
 
 			return _userRepository.List(u => u.Id == user.Id)
+				.FirstOrDefault();
+		}
+
+		internal User GetUserById(ulong userId)
+		{
+			return _userRepository
+				.List(u => u.Id == userId)
 				.FirstOrDefault();
 		}
 	}

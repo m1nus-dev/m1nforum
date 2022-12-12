@@ -495,25 +495,6 @@
     <UserDisplayName>Mr. hanging</UserDisplayName>
   </Topic>
   <Topic>
-    <Id>2212102216240299369</Id>
-    <CreatedOn>2022-12-10T22:16:24.0299469Z</CreatedOn>
-    <UpdatedOn>2022-12-10T22:16:26.6509456Z</UpdatedOn>
-    <CreatedBy>system</CreatedBy>
-    <UpdatedBy>system</UpdatedBy>
-    <DomainId>2212102216237825051</DomainId>
-    <Categoryid>2212102216238449361</Categoryid>
-    <UserId>2291260236744731696</UserId>
-    <Title>Topic.Title - information the</Title>
-    <Content>Topic.Content - disruptive value along streamlined digital</Content>
-    <IsSticky>false</IsSticky>
-    <IsReadOnly>false</IsReadOnly>
-    <CommentCountCache>10</CommentCountCache>
-    <ViewCountCache>0</ViewCountCache>
-    <ActivityAt>2022-12-10T22:16:24.0299071Z</ActivityAt>
-    <ArchivedAt xsi:nil="true" />
-    <UserDisplayName>Mr. will</UserDisplayName>
-  </Topic>
-  <Topic>
     <Id>2212102216240358577</Id>
     <CreatedOn>2022-12-10T22:16:24.0358692Z</CreatedOn>
     <UpdatedOn>2022-12-10T22:16:26.741368Z</UpdatedOn>
@@ -1882,6 +1863,25 @@
     <UserDisplayName>Mr. from</UserDisplayName>
   </Topic>
   <Topic>
+    <Id>2212102216240299369</Id>
+    <CreatedOn>2022-12-10T22:16:24.0299469Z</CreatedOn>
+    <UpdatedOn>2022-12-10T22:16:26.6509456Z</UpdatedOn>
+    <CreatedBy>system</CreatedBy>
+    <UpdatedBy>system</UpdatedBy>
+    <DomainId>2212102216237825051</DomainId>
+    <Categoryid>2212102216238449361</Categoryid>
+    <UserId>2291260236744731696</UserId>
+    <Title>Topic.Title - information the</Title>
+    <Content>Topic.Content - disruptive value along streamlined digital</Content>
+    <IsSticky>false</IsSticky>
+    <IsReadOnly>false</IsReadOnly>
+    <CommentCountCache>10</CommentCountCache>
+    <ViewCountCache>1</ViewCountCache>
+    <ActivityAt>2022-12-10T22:16:24.0299071Z</ActivityAt>
+    <ArchivedAt xsi:nil="true" />
+    <UserDisplayName>Mr. will</UserDisplayName>
+  </Topic>
+  <Topic>
     <Id>2212102216241940921</Id>
     <CreatedOn>2022-12-10T22:16:24.1941099Z</CreatedOn>
     <UpdatedOn>2022-12-10T22:16:29.082696Z</UpdatedOn>
@@ -1895,7 +1895,7 @@
     <IsSticky>false</IsSticky>
     <IsReadOnly>false</IsReadOnly>
     <CommentCountCache>10</CommentCountCache>
-    <ViewCountCache>11</ViewCountCache>
+    <ViewCountCache>12</ViewCountCache>
     <ActivityAt>2022-12-10T22:16:24.1940418Z</ActivityAt>
     <ArchivedAt xsi:nil="true" />
     <UserDisplayName>Mr. the</UserDisplayName>

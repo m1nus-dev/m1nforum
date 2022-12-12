@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using M1nforum.Web.Infrastructure;
+using System.Security.Claims;
+using System.Net.Http;
 
 namespace M1nforum.Web.Services
 {
@@ -93,6 +95,26 @@ namespace M1nforum.Web.Services
 				_dataAccess.UpdateUser(user);
 				return null;
 			}
+		}
+
+		internal User GetuserByClaims(ClaimsPrincipal claimsPrincipal)
+		{
+			if (ulong.TryParse(claimsPrincipal.Claims
+				.Where(c => c.Type == "Id")
+				.Select(c => c.Value)
+				.FirstOrDefault(), out var userId))
+			{
+				return GetUserByid(userId);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		private User GetUserByid(ulong userId)
+		{
+			return _dataAccess.GetUserById(userId);
 		}
 	}
 }

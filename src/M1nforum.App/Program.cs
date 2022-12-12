@@ -14,6 +14,7 @@ using System.Xml.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
 
 namespace M1nforum.Web
 {
@@ -107,6 +108,7 @@ namespace M1nforum.Web
 			app.MapGet("/categories/{categoryId}/topics/{topicId}", async (HttpContext httpContext, ulong categoryId, ulong topicId) => await new Comments().Get(httpContext, categoryId, topicId));
 			app.MapGet("/login", async (HttpContext httpContext) => await new Login().Get(httpContext));
 			app.MapPost("/login", async (HttpContext httpContext) => await new Login().Post(httpContext));
+			app.Map("/logout", async (httpContext) => await new Logout().Get(httpContext));
 
 			app.Run();
 		}

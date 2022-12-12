@@ -17,23 +17,21 @@ namespace M1nforum.Web.Handlers
 		{
 			// model
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
 			var returnUrl = (string)httpContext.Request.Query["ReturnURL"] ?? "/";
-			var userIsLoggedIn = false;
 
-			// if there is a current logged in user
-			if (userIsLoggedIn)
+			if (user != null)
 			{
 				httpContext.Response.Redirect(returnUrl, false);
 				return;
 			}
-
-			// user is not logged in, show login form
 
 			// response
 			await using (var body = await httpContext.StartHtmlResponse())
 			{
 				await body.WriteDocumentHeader(new
 				{
+					User = user,
 					SiteName = domain.Title,
 					Title = "Categories - " + domain.Title,
 					CSSFilename = Program.Cache.DebuggingEnabled ?
@@ -103,7 +101,9 @@ namespace M1nforum.Web.Handlers
 			{
 				var claims = new List<Claim>
 				{
-					new Claim(ClaimTypes.Name, username), 
+					new Claim(ClaimTypes.Name, username),
+					new Claim("IsAdmin", user.IsAdmin.ToString()), 
+					new Claim("Id", user.Id.ToString())
 				};
 
 				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);

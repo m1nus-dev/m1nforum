@@ -30,7 +30,19 @@ await streamWriter.WriteAsync(@""" />
 await streamWriter.WriteAsync(viewModel.SiteName);
 await streamWriter.WriteAsync(@"</a>
 			<a href=""/"">Home</a>
+			");
+ if (viewModel.User == null) { 
+await streamWriter.WriteAsync(@"
 			<a href=""/login"">Login</a>
+			");
+ } else { 
+await streamWriter.WriteAsync(@"
+			<a href=""/logout"">Logout ");
+await streamWriter.WriteAsync(viewModel.User.Username);
+await streamWriter.WriteAsync(@"</a>
+			");
+ } 
+await streamWriter.WriteAsync(@"
 		</div>
 	</nav>
 	<div class=""container"">
@@ -94,10 +106,18 @@ await streamWriter.WriteAsync(@"</td>
 				</tr>
 				");
  } 
-
 await streamWriter.WriteAsync(@"
 			</tbody>
 		</table>
+		");
+ if (viewModel.User != null && viewModel.User.IsAdmin == true ) { 
+await streamWriter.WriteAsync(@"
+		<a href=""/category"">new category</a>
+		");
+ } 
+
+await streamWriter.WriteAsync(@"
+
 	</div>
 ");
 	} 

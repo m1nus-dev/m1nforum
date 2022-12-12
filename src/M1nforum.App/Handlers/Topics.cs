@@ -16,10 +16,9 @@ namespace M1nforum.Web.Handlers
         {
 			// model
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
 			var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
 			var topics = Program.Cache.Business.GetTopicsByCategoryId(domain.Id, category.Id) ?? new List<Topic>();
-
-			// todo:  check for nulls
 
 			// cache
 			if (!Program.Cache.DebuggingEnabled && httpContext.CacheContent(topics.Max(c => c.UpdatedOn)))
@@ -32,6 +31,7 @@ namespace M1nforum.Web.Handlers
 			{
 				await body.WriteDocumentHeader(new
 				{
+					User = user,
 					SiteName = domain.Title,
 					Title = "Categories - " + domain.Title,
 					CSSFilename = Program.Cache.DebuggingEnabled ?
