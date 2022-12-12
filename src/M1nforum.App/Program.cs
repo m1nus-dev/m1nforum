@@ -84,25 +84,12 @@ namespace M1nforum.Web
 				}
 			});
 
-			// request context
-			app.Use(async (httpContext, next) =>
-			{
-				var domain = Cache.Business.GetDomainFromHttpContext(httpContext);
-
-				if (domain == null)
-				{
-					throw new Exception($"Domain not found.");
-				}
-
-				httpContext.Items.Add("Domain", domain);
-
-				await next(httpContext);
-			});
-
 			app.MapGet("/", async (httpContext) => await new Home().Get(httpContext));
 			app.MapGet("/categories", async (httpContext) => await new Categories().Get(httpContext));
 			app.MapGet("/categories/{categoryId}", async (HttpContext httpContext, ulong categoryId) => await new Topics().Get(httpContext, categoryId));
 			app.MapGet("/categories/{categoryId}/topics/{topicId}", async (HttpContext httpContext, ulong categoryId, ulong topicId) => await new Comments().Get(httpContext, categoryId, topicId));
+			app.MapGet("/login", async (HttpContext httpContext) => await new Login().Get(httpContext));
+			app.MapPost("/login", async (HttpContext httpContext) => await new Login().Post(httpContext));
 
 			app.Run();
 		}

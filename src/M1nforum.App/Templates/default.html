@@ -13,16 +13,21 @@
 		<div class="container">
 			<a class="pagename current" href="/"><%= viewModel.SiteName %></a>
 			<a href="/">Home</a>
+			<a href="/login">Login</a>
 		</div>
 	</nav>
-<!-- /template_DocumentHeader -->
-
-
-<!-- template_PageHeader -->
 	<div class="container">
 		<h1 class="mb0"><%= viewModel.Header %></h1>
 		<p class="mt0"><%= viewModel.Subheader %></p>
 	</div>
+
+	<% if (viewModel.FlashMessage != "") { var messageType = viewModel.FlashMessage.Split("-", 2)[0]; var messageBody = viewModel.FlashMessage.Split("-", 2)[1]; %>
+	<div class="container">
+		<div class="bg-<%= messageType %> white pv1 ph2 rounded">
+			<%= messageBody %>
+		</div>
+	</div>
+	<% } %>
 <!-- /template_PageHeader -->
 
 
@@ -83,14 +88,12 @@
 <!-- template_Comments -->
 	<div class="container">
 		<h2><a href="/categories/"><%= viewModel.Category.Name %></a> \ <a href="/categories/<%= viewModel.Category.Id.ToString() %>"><%= viewModel.Topic.Title %></a> \ Comments</h2>
-		<div class="container">
-			<p>
-				<strong><%= viewModel.Topic.Title %></strong><br /><%= viewModel.Topic.CreatedOn.ToString("MM/dd/yyyy, hh:mm tt") %>
-			</p>
-			<p>
-				<%= viewModel.Topic.Content %>
-			</p>
-		</div>
+		<p>
+			<strong><%= viewModel.Topic.Title %></strong><br /><%= viewModel.Topic.CreatedOn.ToString("MM/dd/yyyy, hh:mm tt") %>
+		</p>
+		<p>
+			<%= viewModel.Topic.Content %>
+		</p>
 		<table class="table">
 			<tbody>
 				<% for (var counter = 0; counter < viewModel.Comments.Count; counter++) {
@@ -106,9 +109,46 @@
 	</div>
 <!-- /template_Comments -->
 
+<!-- template_Login -->
+	<div class="container">
+		<form action="/login" method="POST">
+			<fieldset class="b0 m0 p0">
+				<input type="hidden" name="csrf" value="<%= viewModel.CSRF %>">
+				<input type="hidden" name="next" value="<%= viewModel.Next %>">
+				<div class="row">
+					<div class="col 6">
+						<label for="username">Username:</label>
+						<input class="card w-100" type="text" name="username" placeholder="username" required />
+					</div>
+					<div class="col 6"></div>
+				</div>
+				<div class="row">
+					<div class="col 6">
+						<label for="password">Password:</label>
+						<input class="card w-100" type="password" name="password" placeholder="password" required />
+					</div>
+					<div class="col 6"></div>
+				</div>
+				<div class="row">
+					<div class="col 6">
+						Don't have an account? <a href="/signup?next=<%= viewModel.Next %>">Signup</a> : <a href="/forgotpass">Forgot password?</a>
+					</div>
+					<div class="col 6"></div>
+				</div>
+				<div class="row">
+					<div class="col 6">
+						<input class="btn primary" type="submit" value="Login" />
+					</div>
+					<div class="col 6"></div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+<!-- /template_Login -->
+
 
 <!-- template_DocumentFooter -->
-	<div class="mt1 bg-gray p1">
+	<div class="mt1 bg-lightgray p2">
 		<div class="container"><%= viewModel.Title %> | generated on <%= viewModel.GeneratedOn %></div>
 	</div>
 	<script>

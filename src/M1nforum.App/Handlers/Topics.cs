@@ -14,11 +14,8 @@ namespace M1nforum.Web.Handlers
     {
         public async Task Get(HttpContext httpContext, ulong categoryId)
         {
-            // context
-            var domain = httpContext.Get<Domain>("Domain");
-			// user, _ := r.Context().Value(CtxUserKey).(*models.User)
-
 			// model
+			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
 			var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
 			var topics = Program.Cache.Business.GetTopicsByCategoryId(domain.Id, category.Id) ?? new List<Topic>();
 
@@ -39,14 +36,10 @@ namespace M1nforum.Web.Handlers
 					Title = "Categories - " + domain.Title,
 					CSSFilename = Program.Cache.DebuggingEnabled ?
 						"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
-						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp()
-				});
-
-				await body.WritePageHeader(new
-				{
-					Title = "Categories - " + domain.Title,
+						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(), 
 					Header = domain.Title,
-					Subheader = domain.Description
+					Subheader = domain.Description,
+					FlashMessage = httpContext.ReadFlashMessage()
 				});
 
 				await body.WriteTopics(new

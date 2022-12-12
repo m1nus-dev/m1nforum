@@ -6,6 +6,7 @@ using M1nforum.Web.Infrastructure;
 using M1nforum.Web.Services.Entities;
 using M1nforum.Web.Templates;
 using System.Collections.Generic;
+using M1nforum.Web.Infrastructure.Exceptions;
 
 namespace M1nforum.Web.Handlers
 {
@@ -13,11 +14,8 @@ namespace M1nforum.Web.Handlers
 	{
 		public async Task Get(HttpContext httpContext)
 		{
-			// context
-			var domain = httpContext.Get<Domain>("Domain");
-			// user, _ := r.Context().Value(CtxUserKey).(*models.User)
-
 			// model
+			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
 			var categories = Program.Cache.Business.GetCategoriesByDomainId(domain.Id) ?? new List<Category>();
 
 			// cache - do not cache if debugging is enabled - caching is difficult.  The data may not have changed but the css changed and this would cache that bad css. It is a trade off and inperfect.
@@ -35,14 +33,10 @@ namespace M1nforum.Web.Handlers
 					Title = "Categories - " + domain.Title,
 					CSSFilename = Program.Cache.DebuggingEnabled ?
 						"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
-						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp()
-				});
-
-				await body.WritePageHeader(new
-				{
-					Title = "Categories - " + domain.Title,
+						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(), 
 					Header = domain.Title,
-					Subheader = domain.Description
+					Subheader = domain.Description,
+					FlashMessage = httpContext.ReadFlashMessage()
 				});
 
 				// todo:  dont show archived?

@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="$(SolutionDir)_SolutionItems\CopyTemplates.cmd" />
+    <Exec Command="echo $(SolutionDir)&#xD;&#xA;$(SolutionDir)_SolutionItems\CopyTemplates.cmd" />
   </Target>
 
   <ItemGroup>

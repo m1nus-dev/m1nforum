@@ -7,11 +7,6 @@ namespace M1nforum.Web.Infrastructure
 {
 	public static class HttpExtensions
 	{
-		public static T Get<T>(this HttpContext httpContext, string key)
-		{
-			return (T)httpContext.Items[key];
-		}
-
 		// todo:  this helper automatically respond 200 - make generic
 		public async static Task<StreamWriter> StartResponse(this HttpContext httpContext, string contentType)
 		{
@@ -27,6 +22,19 @@ namespace M1nforum.Web.Infrastructure
 		public static async Task<StreamWriter> StartHtmlResponse(this HttpContext httpContext)
 		{
 			return await httpContext.StartResponse("text/html");
+		}
+
+		public static void WriteFlashMessage(this HttpContext httpContext, string type, string message)
+		{
+			httpContext.Response.Cookies.Append("flash_message", type + "-" +message);
+		}
+
+		public static string ReadFlashMessage(this HttpContext httpContext)
+		{
+			var message = httpContext.Request.Cookies["flash_message"];
+			httpContext.Response.Cookies.Delete("flash_message");
+
+			return message ?? string.Empty;
 		}
 	}
 

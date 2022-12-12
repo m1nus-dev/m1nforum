@@ -28,26 +28,36 @@ await streamWriter.WriteAsync(@""" />
 		<div class=""container"">
 			<a class=""pagename current"" href=""/"">");
 await streamWriter.WriteAsync(viewModel.SiteName);
-
 await streamWriter.WriteAsync(@"</a>
 			<a href=""/"">Home</a>
+			<a href=""/login"">Login</a>
 		</div>
 	</nav>
-");
-	} 
-
-	public static async Task WritePageHeader(this StreamWriter streamWriter, dynamic viewModel = null) 
-	{
-		await streamWriter.WriteAsync(@"
 	<div class=""container"">
 		<h1 class=""mb0"">");
 await streamWriter.WriteAsync(viewModel.Header);
 await streamWriter.WriteAsync(@"</h1>
 		<p class=""mt0"">");
 await streamWriter.WriteAsync(viewModel.Subheader);
-
 await streamWriter.WriteAsync(@"</p>
 	</div>
+
+	");
+ if (viewModel.FlashMessage != "") { var messageType = viewModel.FlashMessage.Split("-", 2)[0]; var messageBody = viewModel.FlashMessage.Split("-", 2)[1]; 
+await streamWriter.WriteAsync(@"
+	<div class=""container"">
+		<div class=""bg-");
+await streamWriter.WriteAsync(messageType);
+await streamWriter.WriteAsync(@" white pv1 ph2 rounded"">
+			");
+await streamWriter.WriteAsync(messageBody);
+await streamWriter.WriteAsync(@"
+		</div>
+	</div>
+	");
+ } 
+
+await streamWriter.WriteAsync(@"
 ");
 	} 
 
@@ -154,20 +164,18 @@ await streamWriter.WriteAsync(viewModel.Category.Id.ToString());
 await streamWriter.WriteAsync(@""">");
 await streamWriter.WriteAsync(viewModel.Topic.Title);
 await streamWriter.WriteAsync(@"</a> \ Comments</h2>
-		<div class=""container"">
-			<p>
-				<strong>");
+		<p>
+			<strong>");
 await streamWriter.WriteAsync(viewModel.Topic.Title);
 await streamWriter.WriteAsync(@"</strong><br />");
 await streamWriter.WriteAsync(viewModel.Topic.CreatedOn.ToString("MM/dd/yyyy, hh:mm tt"));
 await streamWriter.WriteAsync(@"
-			</p>
-			<p>
-				");
+		</p>
+		<p>
+			");
 await streamWriter.WriteAsync(viewModel.Topic.Content);
 await streamWriter.WriteAsync(@"
-			</p>
-		</div>
+		</p>
 		<table class=""table"">
 			<tbody>
 				");
@@ -193,10 +201,57 @@ await streamWriter.WriteAsync(@"
 ");
 	} 
 
+	public static async Task WriteLogin(this StreamWriter streamWriter, dynamic viewModel = null) 
+	{
+		await streamWriter.WriteAsync(@"
+	<div class=""container"">
+		<form action=""/login"" method=""POST"">
+			<fieldset class=""b0 m0 p0"">
+				<input type=""hidden"" name=""csrf"" value=""");
+await streamWriter.WriteAsync(viewModel.CSRF);
+await streamWriter.WriteAsync(@""">
+				<input type=""hidden"" name=""next"" value=""");
+await streamWriter.WriteAsync(viewModel.Next);
+await streamWriter.WriteAsync(@""">
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""username"">Username:</label>
+						<input class=""card w-100"" type=""text"" name=""username"" placeholder=""username"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""password"">Password:</label>
+						<input class=""card w-100"" type=""password"" name=""password"" placeholder=""password"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						Don't have an account? <a href=""/signup?next=");
+await streamWriter.WriteAsync(viewModel.Next);
+
+await streamWriter.WriteAsync(@""">Signup</a> : <a href=""/forgotpass"">Forgot password?</a>
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<input class=""btn primary"" type=""submit"" value=""Login"" />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+");
+	} 
+
 	public static async Task WriteDocumentFooter(this StreamWriter streamWriter, dynamic viewModel = null) 
 	{
 		await streamWriter.WriteAsync(@"
-	<div class=""mt1 bg-gray p1"">
+	<div class=""mt1 bg-lightgray p2"">
 		<div class=""container"">");
 await streamWriter.WriteAsync(viewModel.Title);
 await streamWriter.WriteAsync(@" | generated on ");

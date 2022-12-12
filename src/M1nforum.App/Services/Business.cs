@@ -10,12 +10,12 @@ namespace M1nforum.Web.Services
 	{
 		private readonly DataAccess _dataAccess;
 
-		public Business(DataAccess dataAccess)
+		internal Business(DataAccess dataAccess)
 		{
 			_dataAccess = dataAccess;
 		}
 
-		public Domain GetDomainFromHttpContext(HttpContext httpContext)
+		internal Domain GetDomainFromHttpContext(HttpContext httpContext)
 		{
 			var host = httpContext
 				.Request
@@ -28,12 +28,12 @@ namespace M1nforum.Web.Services
 			return _dataAccess.GetDomainByName(host);
 		}
 
-		public List<Category> GetCategoriesByDomainId(ulong domainId)
+		internal List<Category> GetCategoriesByDomainId(ulong domainId)
 		{
 			return _dataAccess.GetCategoriesByDomainId(domainId);
 		}
 
-		public Category GetCategoryById(ulong domainId, ulong categoryId)
+		internal Category GetCategoryById(ulong domainId, ulong categoryId)
 		{
 			return _dataAccess.GetCategoryById(domainId, categoryId);
 		}
@@ -57,5 +57,11 @@ namespace M1nforum.Web.Services
 		{
 			return _dataAccess.GetCommentsByTopicId(domainId, categoryId, topicId);
 		}
+
+		internal User Login(string username, string password)
+		{
+			return null;
+		}
+
 	}
 }

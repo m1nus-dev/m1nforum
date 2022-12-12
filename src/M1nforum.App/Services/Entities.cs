@@ -68,4 +68,16 @@ namespace M1nforum.Web.Services.Entities
 		public bool IsSticky { get; set; }
 		public DateTime? ArchivedAt { get; set; }
 	}
+
+	public class User : Entity
+	{
+		public string Username { get; set; }
+		public string Password { get; set; }
+		public string Email { get; set; }
+		public string About { get; set; }
+		public string ResetToken { get; set; }
+		public string ResetTokenCreatedOn { get; set; }
+		public bool IsAdmin { get; set; }
+		public bool IsBanned { get; set; }
+	}
 }
