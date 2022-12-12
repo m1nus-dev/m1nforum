@@ -4,6 +4,10 @@ using System.Threading.Tasks;
 using M1nforum.Web.Infrastructure;
 using M1nforum.Web.Templates;
 using M1nforum.Web.Infrastructure.Exceptions;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication;
+using System.Collections.Generic;
 
 namespace M1nforum.Web.Handlers
 {
@@ -13,13 +17,13 @@ namespace M1nforum.Web.Handlers
 		{
 			// model
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var redirectUrl = (string)httpContext.Request.Query["next"] ?? "/";
+			var returnUrl = (string)httpContext.Request.Query["ReturnURL"] ?? "/";
 			var userIsLoggedIn = false;
 
 			// if there is a current logged in user
 			if (userIsLoggedIn)
 			{
-				httpContext.Response.Redirect(redirectUrl, false);
+				httpContext.Response.Redirect(returnUrl, false);
 				return;
 			}
 
@@ -43,7 +47,7 @@ namespace M1nforum.Web.Handlers
 				await body.WriteLogin(new
 				{
 					CSRF = "",
-					Next = redirectUrl,
+					ReturnURL = returnUrl,
 				});
 
 				await body.WriteDocumentFooter(new
@@ -58,13 +62,13 @@ namespace M1nforum.Web.Handlers
 		{
 			// model
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var redirectUrl = (string)httpContext.Request.Query["next"] ?? "/";
+			var returnUrl = (string)httpContext.Request.Form["ReturnURL"] ?? "/";
 			var userIsLoggedIn = false;
 
 			// if there is a current logged in user
 			if (userIsLoggedIn)
 			{
-				httpContext.Response.Redirect(redirectUrl, false);
+				httpContext.Response.Redirect(returnUrl, false);
 				return;
 			}
 
@@ -74,40 +78,39 @@ namespace M1nforum.Web.Handlers
 			if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
 			{
 				httpContext.WriteFlashMessage("error", "Username and password required.");
-				httpContext.Response.Redirect("login?next=" + redirectUrl, false);
+				httpContext.Response.Redirect("login?ReturnURL=" + returnUrl, false);
 				return;
 			}
 
 			if (username.Length > 200 || password.Length > 200)
 			{
 				httpContext.WriteFlashMessage("error", "Username or password too long.");
-				httpContext.Response.Redirect("login?next=" + redirectUrl, false);
+				httpContext.Response.Redirect("login?ReturnURL=" + returnUrl, false);
 				return;
 			}
 
 			// todo:  csrf
 
-			// todo:  login
 			var user = Program.Cache.Business.Login(username, password);
-
-			// temp
-			if (username == "asdf")
-			{
-				httpContext.WriteFlashMessage("success", "Logged in successfully.");
-				httpContext.Response.Redirect("login?next=" + redirectUrl, false);
-				return;
-			}
-
 
 			if (user == null)
 			{
 				httpContext.WriteFlashMessage("error", "Unable to login with those credentials.");
-				httpContext.Response.Redirect("login?next=" + redirectUrl, false);
+				httpContext.Response.Redirect("login?ReturnURL=" + returnUrl, false);
 				return;
 			}
 			else
 			{
-				httpContext.Response.Redirect(redirectUrl, false);
+				var claims = new List<Claim>
+				{
+					new Claim(ClaimTypes.Name, username), 
+				};
+
+				var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+				var authProperties = new AuthenticationProperties();
+				await httpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+				httpContext.Response.Redirect(returnUrl, false);
 				return;
 			}
 		}

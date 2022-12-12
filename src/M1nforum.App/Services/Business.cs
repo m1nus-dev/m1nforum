@@ -3,6 +3,7 @@ using M1nforum.Web.Services.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using M1nforum.Web.Infrastructure;
 
 namespace M1nforum.Web.Services
 {
@@ -60,8 +61,38 @@ namespace M1nforum.Web.Services
 
 		internal User Login(string username, string password)
 		{
-			return null;
-		}
+			username = username.ToLower();
 
+			var user = _dataAccess.GetUserByUsername(username);
+
+			if (user == null)
+			{
+				return null;
+			}
+
+			if (user.LockedUntil.HasValue && user.LockedUntil.Value > DateTime.UtcNow)
+			{
+				return null;
+			}
+
+			var passwordsMatch = Security.VerifyPassword(user.Password, password);
+
+			if (passwordsMatch)
+			{
+				user.PasswordFailedCount = 0;
+				user = _dataAccess.UpdateUser(user);
+				return user;
+			}
+			else
+			{
+				user.PasswordFailedCount++;
+				if (user.PasswordFailedCount >= 5) 
+				{
+					user.LockedUntil = DateTime.UtcNow.AddMinutes(30);
+				}
+				_dataAccess.UpdateUser(user);
+				return null;
+			}
+		}
 	}
 }

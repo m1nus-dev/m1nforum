@@ -210,8 +210,8 @@ await streamWriter.WriteAsync(@"
 				<input type=""hidden"" name=""csrf"" value=""");
 await streamWriter.WriteAsync(viewModel.CSRF);
 await streamWriter.WriteAsync(@""">
-				<input type=""hidden"" name=""next"" value=""");
-await streamWriter.WriteAsync(viewModel.Next);
+				<input type=""hidden"" name=""ReturnURL"" value=""");
+await streamWriter.WriteAsync(viewModel.ReturnURL);
 await streamWriter.WriteAsync(@""">
 				<div class=""row"">
 					<div class=""col 6"">
@@ -229,8 +229,8 @@ await streamWriter.WriteAsync(@""">
 				</div>
 				<div class=""row"">
 					<div class=""col 6"">
-						Don't have an account? <a href=""/signup?next=");
-await streamWriter.WriteAsync(viewModel.Next);
+						Don't have an account? <a href=""/signup?ReturnURL=");
+await streamWriter.WriteAsync(viewModel.ReturnURL);
 
 await streamWriter.WriteAsync(@""">Signup</a> : <a href=""/forgotpass"">Forgot password?</a>
 					</div>

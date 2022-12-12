@@ -1,24 +1,25 @@
 ﻿using M1nforum.Web.Services.Entities;
 using M1nforum.Web.Services.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace M1nforum.Web.Services
 {
-    public class DataAccess
+	public class DataAccess
 	{
 		private readonly IRepository<Category> _categoryRepository;
 		private readonly IRepository<Comment> _commentRepository;
 		private readonly IRepository<Domain> _domainRepository;
 		private readonly IRepository<Topic> _topicRepository;
+		private readonly IRepository<User> _userRepository;
 
-		public DataAccess(IRepository<Category> categoryRepository, IRepository<Comment> commentRepository, IRepository<Domain> domainRepository, IRepository<Topic> topicRepository)
+		public DataAccess(IRepository<Category> categoryRepository, IRepository<Comment> commentRepository, IRepository<Domain> domainRepository, IRepository<Topic> topicRepository, IRepository<User> userRepository)
 		{
 			_categoryRepository = categoryRepository;
 			_commentRepository = commentRepository;
 			_domainRepository = domainRepository;
 			_topicRepository = topicRepository;
+			_userRepository = userRepository;
 		}
 
 		public Domain GetDomainByName(string name)
@@ -89,6 +90,23 @@ namespace M1nforum.Web.Services
 				.ToList();
 
 			return comments;
+		}
+
+		internal User GetUserByUsername(string username)
+		{
+			var user = _userRepository
+				.List(u => u.Username == username)
+				.FirstOrDefault();
+
+			return user;
+		}
+
+		internal User UpdateUser(User user)
+		{
+			_userRepository.Update(user);
+
+			return _userRepository.List(u => u.Id == user.Id)
+				.FirstOrDefault();
 		}
 	}
 }

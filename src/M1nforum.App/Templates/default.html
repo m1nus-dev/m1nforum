@@ -114,7 +114,7 @@
 		<form action="/login" method="POST">
 			<fieldset class="b0 m0 p0">
 				<input type="hidden" name="csrf" value="<%= viewModel.CSRF %>">
-				<input type="hidden" name="next" value="<%= viewModel.Next %>">
+				<input type="hidden" name="ReturnURL" value="<%= viewModel.ReturnURL %>">
 				<div class="row">
 					<div class="col 6">
 						<label for="username">Username:</label>
@@ -131,7 +131,7 @@
 				</div>
 				<div class="row">
 					<div class="col 6">
-						Don't have an account? <a href="/signup?next=<%= viewModel.Next %>">Signup</a> : <a href="/forgotpass">Forgot password?</a>
+						Don't have an account? <a href="/signup?ReturnURL=<%= viewModel.ReturnURL %>">Signup</a> : <a href="/forgotpass">Forgot password?</a>
 					</div>
 					<div class="col 6"></div>
 				</div>

@@ -77,6 +77,8 @@ namespace M1nforum.Web.Services.Entities
 		public string About { get; set; }
 		public string ResetToken { get; set; }
 		public string ResetTokenCreatedOn { get; set; }
+		public int PasswordFailedCount { get; set; }
+		public DateTime? LockedUntil { get; set; }
 		public bool IsAdmin { get; set; }
 		public bool IsBanned { get; set; }
 	}

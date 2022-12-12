@@ -10,6 +10,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using M1nforum.Web.Handlers;
 using M1nforum.Web.Infrastructure.Exceptions;
+using System.Xml.Linq;
+using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace M1nforum.Web
 {
@@ -23,6 +27,14 @@ namespace M1nforum.Web
 
 			await Program.Seed();
 
+			// auth
+			builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+				.AddCookie(options =>
+				{
+					options.LoginPath = new PathString("/login");
+				});
+			builder.Services.AddAuthorization();
+
 			// setup services instances - this is similar to Services.AddTransient
 
 			Cache = new Cache();
@@ -31,13 +43,18 @@ namespace M1nforum.Web
 				new XmlRepository<Category>(),
 				new XmlRepository<Comment>(),
 				new XmlRepository<Domain>(),
-				new XmlRepository<Topic>());
+				new XmlRepository<Topic>(), 
+				new XmlRepository<User>());
 			Cache.Business = new Business(dataAccess);
 
 			// todo:  move this to environment variable
 			Cache.DebuggingEnabled = true;
 
 			var app = builder.Build();
+
+			// auth
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			app.UseResponseCaching();
 
@@ -99,7 +116,7 @@ namespace M1nforum.Web
 			var words = @"leverage agile frameworks to provide a robust synopsis for high level overviews iterative approaches to corporate strategy foster collaborative thinking to further the overall value proposition organically grow the holistic world view of disruptive innovation via workplace diversity and empowerment bring to the table win-win survival strategies to ensure proactive domination at the end of the day, going forward, a new normal that has evolved from generation X is on the runway heading towards a streamlined cloud solution user generated content in real-time will have multiple touchpoints for offshoring capitalize on low hanging fruit to identify a ballpark value added activity to beta test override the digital divide with additional clickthroughs from DevOps nanotechnology immersion along the information highway will close the loop on focusing solely on the bottom line"
 				.Split(" ");
 
-			var output  = new string[count];
+			var output = new string[count];
 			var random = new Random();
 
 			for (var counter = 0; counter < count; counter++)
@@ -116,6 +133,8 @@ namespace M1nforum.Web
 			IRepository<Comment> commentRepository = new XmlRepository<Comment>();
 			IRepository<Domain> domainRepository = new XmlRepository<Domain>();
 			IRepository<Topic> topicRepository = new XmlRepository<Topic>();
+			IRepository<User> userRepository = new XmlRepository<User>();
+
 			var random = new Random();
 
 			var domains = domainRepository.List();
@@ -192,7 +211,7 @@ namespace M1nforum.Web
 							topic.IsSticky = false;
 							topic.CommentCountCache = 0;
 							topic.ViewCountCache = 0;
-							topic.Title = "Topic.Title - " + GetWords(random.Next(1,3));
+							topic.Title = "Topic.Title - " + GetWords(random.Next(1, 3));
 							topic.UserDisplayName = "Mr. " + GetWords(1);
 							topic.UserId = (ulong)new Random().NextInt64();
 
@@ -254,9 +273,57 @@ namespace M1nforum.Web
 			}
 
 			comments = commentRepository.List();
+
+			var users = userRepository.List();
+
+			if (!users.Any())
+			{
+				var user = new User();
+				user.CreatedBy = user.UpdatedBy = "system";
+				user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
+				user.Id = IdGenerator.NewId();
+
+				user.About = GetWords(100);
+				user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
+				user.IsAdmin = true;
+				user.IsBanned = false;
+				user.Password = Security.GenerateHashPassword("Password1");
+				user.Username = "admin";
+
+				userRepository.Insert(user);
+
+				user = new User();
+				user.CreatedBy = user.UpdatedBy = "system";
+				user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
+				user.Id = IdGenerator.NewId();
+
+				user.About = GetWords(100);
+				user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
+				user.IsAdmin = false;
+				user.IsBanned = false;
+				user.Password = Security.GenerateHashPassword("Password1");
+				user.Username = "user";
+
+				userRepository.Insert(user);
+
+				user = new User();
+				user.CreatedBy = user.UpdatedBy = "system";
+				user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
+				user.Id = IdGenerator.NewId();
+
+				user.About = GetWords(100);
+				user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
+				user.IsAdmin = false;
+				user.IsBanned = true;
+				user.Password = Security.GenerateHashPassword("Password1");
+				user.Username = "banned";
+
+				userRepository.Insert(user);
+			}
 		}
 	}
 }
+
 
 
 
