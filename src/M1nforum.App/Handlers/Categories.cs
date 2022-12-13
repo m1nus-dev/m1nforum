@@ -12,7 +12,7 @@ namespace M1nforum.Web.Handlers
 {
 	public class Categories
 	{
-		public async Task Get(HttpContext httpContext)
+		public async Task Browse(HttpContext httpContext)
 		{
 			// model
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
@@ -54,6 +54,16 @@ namespace M1nforum.Web.Handlers
 					GeneratedOn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")
 				});
 			}
+		}
+
+		public async Task Add(HttpContext httpContext)
+		{
+
+		}
+
+		public async Task Add(HttpContext httpContext, Category category)
+		{
+
 		}
 	}
 }

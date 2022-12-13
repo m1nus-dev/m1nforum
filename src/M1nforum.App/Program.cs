@@ -15,6 +15,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace M1nforum.Web
 {
@@ -52,6 +53,11 @@ namespace M1nforum.Web
 			Cache.DebuggingEnabled = true;
 
 			var app = builder.Build();
+
+			if (Cache.DebuggingEnabled)
+			{
+				app.UseDeveloperExceptionPage();
+			}
 
 			// auth
 			app.UseAuthentication();
@@ -103,9 +109,12 @@ namespace M1nforum.Web
 			});
 
 			app.MapGet("/", async (httpContext) => await new Home().Get(httpContext));
-			app.MapGet("/categories", async (httpContext) => await new Categories().Get(httpContext));
+			app.MapGet("/categories", async (httpContext) => await new Categories().Browse(httpContext));
 			app.MapGet("/categories/{categoryId}", async (HttpContext httpContext, ulong categoryId) => await new Topics().Get(httpContext, categoryId));
 			app.MapGet("/categories/{categoryId}/topics/{topicId}", async (HttpContext httpContext, ulong categoryId, ulong topicId) => await new Comments().Get(httpContext, categoryId, topicId));
+			app.MapGet("/domains", async (HttpContext httpContext) => await new Domains().Browse(httpContext));
+			app.MapGet("/domains/add", async (HttpContext httpContext) => await new Domains().Add(httpContext));
+			app.MapPost("/domains/add", async (HttpContext httpContext) => await new Domains().AddPost(httpContext));
 			app.MapGet("/login", async (HttpContext httpContext) => await new Login().Get(httpContext));
 			app.MapPost("/login", async (HttpContext httpContext) => await new Login().Post(httpContext));
 			app.Map("/logout", async (httpContext) => await new Logout().Get(httpContext));
@@ -170,7 +179,7 @@ namespace M1nforum.Web
 					{
 						var category = new Category();
 
-						category.ArchivedAt = null;
+						category.ArchivedOn = null;
 						category.Description = "Category.Description - " + GetWords(random.Next(1, 5));
 						category.HeaderMessage = "Category.HeaderMessage - " + GetWords(random.Next(1, 3));
 						category.IsPrivate = counter % 3 == 0;
@@ -204,10 +213,10 @@ namespace M1nforum.Web
 						{
 							var topic = new Topic();
 
-							topic.ActivityAt = DateTime.UtcNow;
+							topic.LastActivityOn = DateTime.UtcNow;
 							topic.IsSticky = new Random().Next(0, 1) == 0;
 							topic.CommentCountCache = 0;
-							topic.ArchivedAt = null;
+							topic.ArchivedOn = null;
 							topic.Content = "Topic.Content - " + GetWords(random.Next(1, 40));
 							topic.IsReadOnly = counter == 3;
 							topic.IsSticky = false;
@@ -249,7 +258,7 @@ namespace M1nforum.Web
 							{
 								var comment = new Comment();
 
-								comment.ArchivedAt = null;
+								comment.ArchivedOn = null;
 								comment.CommentCountCache = 0; // todo:  ?
 								comment.Content = "Comment.Content - " + GetWords(random.Next(1, 50));
 								comment.IsSticky = false;

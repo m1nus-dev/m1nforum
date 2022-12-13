@@ -21,7 +21,7 @@ namespace M1nforum.Web.Handlers
 			var topics = Program.Cache.Business.GetTopicsByCategoryId(domain.Id, category.Id) ?? new List<Topic>();
 
 			// cache
-			if (!Program.Cache.DebuggingEnabled && httpContext.CacheContent(topics.Max(c => c.UpdatedOn)))
+			if (!Program.Cache.DebuggingEnabled && httpContext.CacheContent(topics.Max(t => t.UpdatedOn)))
             {
                 return;
             }

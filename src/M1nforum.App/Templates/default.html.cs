@@ -73,6 +73,112 @@ await streamWriter.WriteAsync(@"
 ");
 	} 
 
+	public static async Task WriteDomains(this StreamWriter streamWriter, dynamic viewModel = null) 
+	{
+		await streamWriter.WriteAsync(@"
+	<div class=""container"">
+		<h2>Domains</h2>
+		<table class=""table"">
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Title</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+				");
+ for (var counter = 0; counter < viewModel.Domains.Count; counter++) {
+					var domain = viewModel.Domains[counter]; 
+await streamWriter.WriteAsync(@"				
+				<tr>
+					<td><a href=""/domains/");
+await streamWriter.WriteAsync(domain.Id.ToString());
+await streamWriter.WriteAsync(@""">");
+await streamWriter.WriteAsync(domain.Name);
+await streamWriter.WriteAsync(@"</a></td>
+					<td>");
+await streamWriter.WriteAsync(domain.Title);
+await streamWriter.WriteAsync(@"</td>
+					<td>");
+await streamWriter.WriteAsync(domain.Description);
+await streamWriter.WriteAsync(@"</td>
+				</tr>
+				");
+ } 
+await streamWriter.WriteAsync(@"
+			</tbody>
+		</table>
+		");
+ if (viewModel.User != null && viewModel.User.IsAdmin == true ) { 
+await streamWriter.WriteAsync(@"
+		<a href=""/domains/add"">New Domain</a>
+		");
+ } 
+
+await streamWriter.WriteAsync(@"
+	</div>
+");
+	} 
+
+	public static async Task WriteDomain(this StreamWriter streamWriter, dynamic viewModel = null) 
+	{
+		await streamWriter.WriteAsync(@"
+	<div class=""container"">
+		<h2>");
+await streamWriter.WriteAsync(viewModel.ActionTitle);
+await streamWriter.WriteAsync(@" Domain</h2>
+
+		<form action=""/domains/");
+await streamWriter.WriteAsync(viewModel.Action);
+await streamWriter.WriteAsync(@""" method=""POST"">
+			<fieldset class=""b0 m0 p0"">
+				<!--<input type=""hidden"" name=""csrf"" value=""");
+await streamWriter.WriteAsync(viewModel.CSRF);
+await streamWriter.WriteAsync(@""">-->
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""Name"">Name:</label>
+						<input class=""card w-100"" type=""text"" name=""Name"" placeholder=""Name"" value=""");
+await streamWriter.WriteAsync(viewModel.Domain.Name);
+await streamWriter.WriteAsync(@""" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""Name"">Title:</label>
+						<input class=""card w-100"" type=""text"" name=""Title"" placeholder=""Title"" value=""");
+await streamWriter.WriteAsync(viewModel.Domain.Title);
+await streamWriter.WriteAsync(@""" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""password"">Description:</label>
+						<input class=""card w-100"" type=""text"" name=""Description"" placeholder=""Description"" value=""");
+await streamWriter.WriteAsync(viewModel.Domain.Description);
+await streamWriter.WriteAsync(@""" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<input class=""btn primary"" type=""submit"" value=""");
+await streamWriter.WriteAsync(viewModel.ActionTitle);
+
+await streamWriter.WriteAsync(@""" />
+						<a href=""/domains"">Cancel</a>
+					</div>
+					<div class=""col 6""></div>
+				</div>
+			</fieldset>
+		</form>
+	</div>
+");
+	} 
+
 	public static async Task WriteCategories(this StreamWriter streamWriter, dynamic viewModel = null) 
 	{
 		await streamWriter.WriteAsync(@"
@@ -117,7 +223,86 @@ await streamWriter.WriteAsync(@"
  } 
 
 await streamWriter.WriteAsync(@"
+	</div>
+");
+	} 
 
+	public static async Task WriteCategoryAdd(this StreamWriter streamWriter, dynamic viewModel = null) 
+	{
+		await streamWriter.WriteAsync(@"
+	<div class=""container"">
+		<h2>Add Category</h2>
+		<form action=""/category/add"" method=""POST"">
+			<fieldset class=""b0 m0 p0"">
+				<input type=""hidden"" name=""csrf"" value=""");
+await streamWriter.WriteAsync(viewModel.CSRF);
+await streamWriter.WriteAsync(@""">
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""username"">Name:</label>
+						<input class=""card w-100"" type=""text"" name=""username"" placeholder=""username"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""password"">Description:</label>
+						<input class=""card w-100"" type=""password"" name=""password"" placeholder=""password"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""password"">Header Message:</label>
+						<input class=""card w-100"" type=""password"" name=""password"" placeholder=""password"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""password"">Is Private:</label>
+						<input class=""card w-100"" type=""password"" name=""password"" placeholder=""password"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""password"">Is Readonly:</label>
+						<input class=""card w-100"" type=""password"" name=""password"" placeholder=""password"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""password"">Is Restricted:</label>
+						<input class=""card w-100"" type=""password"" name=""password"" placeholder=""password"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<label for=""password"">Archived On:</label>
+						<input class=""card w-100"" type=""password"" name=""password"" placeholder=""password"" required />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						Don't have an account? <a href=""/signup?ReturnURL=");
+await streamWriter.WriteAsync(viewModel.ReturnURL);
+
+await streamWriter.WriteAsync(@""">Signup</a> : <a href=""/forgotpass"">Forgot password?</a>
+					</div>
+					<div class=""col 6""></div>
+				</div>
+				<div class=""row"">
+					<div class=""col 6"">
+						<input class=""btn primary"" type=""submit"" value=""Login"" />
+					</div>
+					<div class=""col 6""></div>
+				</div>
+			</fieldset>
+		</form>
 	</div>
 ");
 	} 

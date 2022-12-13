@@ -10,4 +10,14 @@
     <Title>The Host that is Local</Title>
     <Description>Testing domain for the localhost.</Description>
   </Domain>
+  <Domain>
+    <Id>2212131547474654255</Id>
+    <CreatedOn>2022-12-13T15:47:47.465548Z</CreatedOn>
+    <UpdatedOn>2022-12-13T15:47:47.465548Z</UpdatedOn>
+    <CreatedBy>2212120812080182222</CreatedBy>
+    <UpdatedBy>2212120812080182222</UpdatedBy>
+    <Name>a</Name>
+    <Title>a</Title>
+    <Description>a</Description>
+  </Domain>
 </ArrayOfDomain>

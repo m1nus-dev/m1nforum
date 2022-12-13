@@ -32,6 +32,13 @@ namespace M1nforum.Web.Services
 			return domain;
 		}
 
+		internal List<Domain> GetDomains()
+		{
+			return _domainRepository
+				.List();
+		}
+
+
 		public List<Category> GetCategoriesByDomainId(ulong domainId) 
 		{
 			var categories = _categoryRepository
@@ -55,7 +62,7 @@ namespace M1nforum.Web.Services
 		{
 			var topics = _topicRepository
 				.List(t => t.DomainId.Equals(domainId) && t.Categoryid == categoryId)
-				.OrderByDescending(t => t.ActivityAt)
+				.OrderByDescending(t => t.LastActivityOn)
 				.ToList();
 
 			return topics;
@@ -115,6 +122,11 @@ namespace M1nforum.Web.Services
 			return _userRepository
 				.List(u => u.Id == userId)
 				.FirstOrDefault();
+		}
+
+		internal void InsertDomain(Domain domain)
+		{
+			_domainRepository.Insert(domain);
 		}
 	}
 }

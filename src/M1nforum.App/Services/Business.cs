@@ -6,10 +6,12 @@ using System.Linq;
 using M1nforum.Web.Infrastructure;
 using System.Security.Claims;
 using System.Net.Http;
+using System.Reflection.Metadata.Ecma335;
+using System.Linq.Expressions;
 
 namespace M1nforum.Web.Services
 {
-    public class Business
+	public class Business
 	{
 		private readonly DataAccess _dataAccess;
 
@@ -17,6 +19,10 @@ namespace M1nforum.Web.Services
 		{
 			_dataAccess = dataAccess;
 		}
+
+		//
+		// todo:  all of these methods need validation
+		//
 
 		internal Domain GetDomainFromHttpContext(HttpContext httpContext)
 		{
@@ -29,6 +35,13 @@ namespace M1nforum.Web.Services
 				.First();
 
 			return _dataAccess.GetDomainByName(host);
+		}
+
+		internal List<Domain> GetDomains(User user)
+		{
+			return (user != null && !user.IsBanned && user.IsAdmin) ?
+				_dataAccess.GetDomains() :
+				null;
 		}
 
 		internal List<Category> GetCategoriesByDomainId(ulong domainId)
@@ -88,7 +101,7 @@ namespace M1nforum.Web.Services
 			else
 			{
 				user.PasswordFailedCount++;
-				if (user.PasswordFailedCount >= 5) 
+				if (user.PasswordFailedCount >= 5)
 				{
 					user.LockedUntil = DateTime.UtcNow.AddMinutes(30);
 				}
@@ -112,9 +125,17 @@ namespace M1nforum.Web.Services
 			}
 		}
 
-		private User GetUserByid(ulong userId)
+		internal User GetUserByid(ulong userId)
 		{
 			return _dataAccess.GetUserById(userId);
+		}
+
+		internal void InsertDomain(User user, Domain domain)
+		{
+			domain.CreatedOn = domain.UpdatedOn = DateTime.UtcNow;
+			domain.CreatedBy = domain.UpdatedBy = user.Id.ToString(); // todo:  should this be a name?
+
+			_dataAccess.InsertDomain(domain);
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace M1nforum.Web.Services.Entities
 		public bool IsPrivate { get; set; }
 		public bool IsReadOnly { get; set; }
 		public bool IsRestricted { get; set; }
-		public DateTime? ArchivedAt { get; set; }
+		public DateTime? ArchivedOn { get; set; }
 	}
 
 	public class Topic : Entity
@@ -51,8 +51,8 @@ namespace M1nforum.Web.Services.Entities
 		public bool IsReadOnly { get; set; }
 		public int CommentCountCache { get; set; }
 		public int ViewCountCache { get; set; }
-		public DateTime ActivityAt { get; set; }
-		public DateTime? ArchivedAt { get; set; }
+		public DateTime LastActivityOn { get; set; }
+		public DateTime? ArchivedOn { get; set; }
 		public string UserDisplayName { get; set; }
 	}
 
@@ -66,7 +66,7 @@ namespace M1nforum.Web.Services.Entities
 		public int CommentCountCache { get; set; } // todo:  ?
 		public string Content { get; set; }
 		public bool IsSticky { get; set; }
-		public DateTime? ArchivedAt { get; set; }
+		public DateTime? ArchivedOn { get; set; }
 	}
 
 	public class User : Entity
