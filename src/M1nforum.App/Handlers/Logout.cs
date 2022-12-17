@@ -12,7 +12,7 @@ namespace M1nforum.Web.Handlers
 			var authProperties = new AuthenticationProperties();
 			await httpContext.SignOutAsync(authProperties);
 
-			httpContext.WriteFlashMessage("info", "You have been logged out.");
+			await httpContext.WriteFlashMessage("info", "You have been logged out.");
 			httpContext.Response.Redirect("/", false);
 			return;
 		}

@@ -16,9 +16,10 @@ namespace M1nforum.Web.Handlers
         {
 			// model
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
+			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
 			var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
 			var topics = Program.Cache.Business.GetTopicsByCategoryId(domain.Id, category.Id) ?? new List<Topic>();
+			var isAdmin = user?.IsAdmin == true && user?.IsBanned == false;
 
 			// cache
 			if (!Program.Cache.DebuggingEnabled && httpContext.CacheContent(topics.Max(t => t.UpdatedOn)))
@@ -31,20 +32,22 @@ namespace M1nforum.Web.Handlers
 			{
 				await body.WriteDocumentHeader(new
 				{
-					User = user,
-					SiteName = domain.Title,
-					Title = "Categories - " + domain.Title,
 					CSSFilename = Program.Cache.DebuggingEnabled ?
 						"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
-						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(), 
+						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(),
+					FlashMessage = httpContext.ReadFlashMessage(), 
 					Header = domain.Title,
+					IsAdmin = isAdmin, 
+					SiteName = domain.Title,
 					Subheader = domain.Description,
-					FlashMessage = httpContext.ReadFlashMessage()
+					Title = "Categories - " + domain.Title,
+					User = user
 				});
 
 				await body.WriteTopics(new
 				{
-					Category = category, 
+					Category = category,
+					IsAdmin = isAdmin, 
 					Topics = topics
 				});
 

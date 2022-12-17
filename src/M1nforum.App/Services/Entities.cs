@@ -71,6 +71,7 @@ namespace M1nforum.Web.Services.Entities
 
 	public class User : Entity
 	{
+		public ulong DomainId { get; set; }
 		public string Username { get; set; }
 		public string Password { get; set; }
 		public string Email { get; set; }

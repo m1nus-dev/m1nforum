@@ -16,6 +16,9 @@
 			<% if (viewModel.User == null) { %>
 			<a href="/login">Login</a>
 			<% } else { %>
+				<% if (viewModel.IsAdmin == true) { %>
+				<a href="/domains">Domains</a>
+				<% } %>
 			<a href="/logout">Logout <%= viewModel.User.Username %></a>
 			<% } %>
 		</div>
@@ -57,7 +60,7 @@
 				<% } %>
 			</tbody>
 		</table>
-		<% if (viewModel.User != null && viewModel.User.IsAdmin == true ) { %>
+		<% if (viewModel.IsAdmin == true) { %>
 		<a href="/domains/add">New Domain</a>
 		<% } %>
 	</div>
@@ -74,6 +77,9 @@
 					<div class="col 6">
 						<label for="Name">Name:</label>
 						<input class="card w-100" type="text" name="Name" placeholder="Name" value="<%= viewModel.Domain.Name %>" required />
+						<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Name")) { %>
+						<p><b class="error">* <%= validationException.message %></b></p>
+						<% } %>
 					</div>
 					<div class="col 6"></div>
 				</div>
@@ -81,13 +87,19 @@
 					<div class="col 6">
 						<label for="Name">Title:</label>
 						<input class="card w-100" type="text" name="Title" placeholder="Title" value="<%= viewModel.Domain.Title %>" required />
+						<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Title")) { %>
+						<p><b class="error">* <%= validationException.message %></b></p>
+						<% } %>
 					</div>
 					<div class="col 6"></div>
 				</div>
 				<div class="row">
 					<div class="col 6">
 						<label for="password">Description:</label>
-						<input class="card w-100" type="text" name="Description" placeholder="Description" value="<%= viewModel.Domain.Description %>" required />
+						<input class="card w-100" type="text" name="Description" placeholder="Description" value="<%= viewModel.Domain.Description %>" />
+						<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Description")) { %>
+						<p><b class="error">* <%= validationException.message %></b></p>
+						<% } %>
 					</div>
 					<div class="col 6"></div>
 				</div>
@@ -127,7 +139,7 @@
 				<% } %>
 			</tbody>
 		</table>
-		<% if (viewModel.User != null && viewModel.User.IsAdmin == true ) { %>
+		<% if (viewModel.IsAdmin == true) { %>
 		<a href="/category">new category</a>
 		<% } %>
 	</div>

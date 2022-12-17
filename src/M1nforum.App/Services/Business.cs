@@ -74,11 +74,11 @@ namespace M1nforum.Web.Services
 			return _dataAccess.GetCommentsByTopicId(domainId, categoryId, topicId);
 		}
 
-		internal User Login(string username, string password)
+		internal User Login(ulong domainId, string username, string password)
 		{
 			username = username.ToLower();
 
-			var user = _dataAccess.GetUserByUsername(username);
+			var user = _dataAccess.GetUserByUsername(domainId, username);
 
 			if (user == null)
 			{
@@ -95,7 +95,7 @@ namespace M1nforum.Web.Services
 			if (passwordsMatch)
 			{
 				user.PasswordFailedCount = 0;
-				user = _dataAccess.UpdateUser(user);
+				user = _dataAccess.UpdateUser(domainId, user);
 				return user;
 			}
 			else
@@ -105,19 +105,19 @@ namespace M1nforum.Web.Services
 				{
 					user.LockedUntil = DateTime.UtcNow.AddMinutes(30);
 				}
-				_dataAccess.UpdateUser(user);
+				_dataAccess.UpdateUser(domainId, user);
 				return null;
 			}
 		}
 
-		internal User GetuserByClaims(ClaimsPrincipal claimsPrincipal)
+		internal User GetUserByClaims(ulong domainId, ClaimsPrincipal claimsPrincipal)
 		{
 			if (ulong.TryParse(claimsPrincipal.Claims
 				.Where(c => c.Type == "Id")
 				.Select(c => c.Value)
 				.FirstOrDefault(), out var userId))
 			{
-				return GetUserByid(userId);
+				return GetUserByid(domainId, userId);
 			}
 			else
 			{
@@ -125,9 +125,9 @@ namespace M1nforum.Web.Services
 			}
 		}
 
-		internal User GetUserByid(ulong userId)
+		internal User GetUserByid(ulong domainId, ulong userId)
 		{
-			return _dataAccess.GetUserById(userId);
+			return _dataAccess.GetUserById(domainId, userId);
 		}
 
 		internal void InsertDomain(User user, Domain domain)

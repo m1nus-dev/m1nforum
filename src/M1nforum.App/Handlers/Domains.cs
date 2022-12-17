@@ -5,6 +5,9 @@ using System.Linq;
 using M1nforum.Web.Infrastructure;
 using M1nforum.Web.Services.Entities;
 using M1nforum.Web.Templates;
+using M1nforum.Web.Infrastructure.Validation;
+using M1nforum.Web.Infrastructure.Exceptions;
+using System.Text.Json;
 using System.Collections.Generic;
 
 namespace M1nforum.Web.Handlers
@@ -14,10 +17,12 @@ namespace M1nforum.Web.Handlers
 		public async Task Browse(HttpContext httpContext)
 		{
 			// model
-			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
+			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
+			var isAdmin = user?.IsAdmin == true && user?.IsBanned == false;
 
 			// todo:  permissions
-			if (user?.IsAdmin == true && !user?.IsBanned == false)
+			if (!isAdmin)
 			{
 				// todo:  401
 				await httpContext.Response.WriteAsJsonAsync("Not Authorized");
@@ -36,22 +41,24 @@ namespace M1nforum.Web.Handlers
 			{
 				await body.WriteDocumentHeader(new
 				{
-					User = user,
-					SiteName = "Domain Admin", // todo
-					Title = "Domains - Domain Admin",
 					CSSFilename = Program.Cache.DebuggingEnabled ?
 						"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
-						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(), 
+						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(),
+					FlashMessage = httpContext.ReadFlashMessage(), 
 					Header = "Domain Admin",
+					IsAdmin = isAdmin, 
+					SiteName = "Domain Admin", // todo
 					Subheader = "Domain Admin",
-					FlashMessage = httpContext.ReadFlashMessage() 
+					Title = "Domains - Domain Admin",
+					User = user
 				});
 
 				// todo:  dont show archived?
 				await body.WriteDomains(new
 				{
 					User = user,
-					Domains = domains
+					Domains = domains, 
+					IsAdmin = isAdmin
 				});
 
 				await body.WriteDocumentFooter(new
@@ -65,46 +72,54 @@ namespace M1nforum.Web.Handlers
 		public async Task Add(HttpContext httpContext)
 		{
 			// model
-			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
+			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
+			var isAdmin = user?.IsAdmin == true && user?.IsBanned == false;
 
-			// todo:  permissions
-			if (user?.IsAdmin == true && !user?.IsBanned == false)
+			if (!isAdmin)
 			{
 				// todo:  401
-				await httpContext.Response.WriteAsJsonAsync("Not Authorized");
+				throw new UnauthorizedAccessException(); // todo:  this is for IO, not for web
 			}
+
+			var model = httpContext.ReadAndDeleteCookie("model");
+			var newDomain = string.IsNullOrEmpty(model) ?
+				new Domain() { Name = "a", Title = "a", Description = "a" } : // empty domain // todo:  temp
+				model.Deserialize<Domain>();
+			var validationExceptions = httpContext.ReadAndDeleteCookie("validation").Deserialize<List<ValidationException>>() ?? new List<ValidationException>();
 
 			// response
 			await using (var body = await httpContext.StartHtmlResponse())
 			{
 				await body.WriteDocumentHeader(new
 				{
-					User = user,
-					SiteName = "Domain Admin", // todo
-					Title = "Add Domain - Domain Admin",
 					CSSFilename = Program.Cache.DebuggingEnabled ?
 						"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
 						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(),
+					FlashMessage = httpContext.ReadFlashMessage(), 
 					Header = "Add Domain",
+					IsAdmin = isAdmin, 
+					SiteName = "Domain Admin", // todo
 					Subheader = "Domain adding happens here",
-					FlashMessage = httpContext.ReadFlashMessage()
+					Title = "Add Domain - Domain Admin",
+					User = user
 				});
 
 				// todo:  dont show archived?
 				await body.WriteDomain(new
 				{
-					CSRF = "",
-
 					Action = "add",
 					ActionTitle = "Add",
+					CSRF = "", // todo
+					Domain = newDomain,
 					User = user,
-					Domain = new Domain() { Name = "", Title = "", Description = "" }
+					ValidationExceptions = validationExceptions
 				});
 
 				await body.WriteDocumentFooter(new
 				{
-					Title = "Domain Admin",
-					GeneratedOn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")
+					GeneratedOn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss"), 
+					Title = "Domain Admin"
 				});
 			}
 		}
@@ -112,17 +127,18 @@ namespace M1nforum.Web.Handlers
 		public async Task AddPost(HttpContext httpContext)
 		{
 			// model
+			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
 			var form = httpContext.Request.Form;
-			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
+			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
+			var isAdmin = user?.IsAdmin == true && user?.IsBanned == false;
 
-			// todo:  permissions
-			if (user?.IsAdmin == true && !user?.IsBanned == false)
+			if (!isAdmin)
 			{
 				// todo:  401
-				await httpContext.Response.WriteAsJsonAsync("Not Authorized");
+				throw new UnauthorizedAccessException(); // todo:  this is for IO, not for web
 			}
 
-			var domain = new Domain()
+			var newDomain = new Domain()
 			{
 				Id = IdGenerator.NewId(),
 				Name = form["Name"],
@@ -132,11 +148,31 @@ namespace M1nforum.Web.Handlers
 
 			// todo:  validation
 
-			Program.Cache.Business.InsertDomain(user, domain);
+			var exceptions = new Validation() // todo:  these validations should be in the bll also.
+				.IsNotNull(newDomain.Title, nameof(newDomain.Title))
+				.IsLengthInRange(newDomain.Title, nameof(newDomain.Title), 1, 64)
+				.IsNotNull(newDomain.Name, nameof(newDomain.Name))
+				.IsLengthInRange(newDomain.Name, nameof(newDomain.Name), 5, 64)
+				.IsNotNull(newDomain.Description, nameof(newDomain.Description))
+				.IsLengthInRange(newDomain.Description, nameof(newDomain.Description), 0, 128)
+				.GetValidationExceptions();
 
-			httpContext.WriteFlashMessage("success", "Domain added.");
-			httpContext.Response.Redirect("/domains", false);
-			return;
+			if (exceptions.Count == 0)
+			{
+				Program.Cache.Business.InsertDomain(user, newDomain);
+
+				await httpContext.WriteFlashMessage("success", "Domain added.");
+				httpContext.Response.Redirect("/domains", false);
+				return;
+			}
+			else
+			{
+				await httpContext.WriteCookie("flash_message", "error-Domain add failed.  Correct the errors below and try again.");
+				await httpContext.WriteCookie("validation", JsonSerializer.Serialize(exceptions));
+				await httpContext.WriteCookie("model", JsonSerializer.Serialize(newDomain));
+				httpContext.Response.Redirect("/domains/add", false);
+				return;
+			}
 		}
 	}
 }

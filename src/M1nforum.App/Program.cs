@@ -10,12 +10,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using M1nforum.Web.Handlers;
 using M1nforum.Web.Infrastructure.Exceptions;
-using System.Xml.Linq;
-using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http;
-using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace M1nforum.Web
 {
@@ -75,6 +72,25 @@ namespace M1nforum.Web
 			});
 
 			// app.UseResponseCompression();
+
+			// timer handler
+			app.Use(async (httpContext, next) =>
+			{
+				if (Cache.DebuggingEnabled)
+				{
+					var stopwatch = Stopwatch.StartNew();
+					await next();
+					stopwatch.Stop();
+
+					// await httpContext.Response.WriteAsync("<!-- " + stopwatch.ElapsedMilliseconds + " -->");
+					await httpContext.Response.WriteAsync("Debugging Enabled:  Server Processing Time:  " + stopwatch.Elapsed.ToString());
+				}
+				else
+				{
+					await next();
+				}
+			});
+
 
 			// error handler
 			app.Use(async (httpContext, next) =>
@@ -289,47 +305,53 @@ namespace M1nforum.Web
 
 			if (!users.Any())
 			{
-				var user = new User();
-				user.CreatedBy = user.UpdatedBy = "system";
-				user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
-				user.Id = IdGenerator.NewId();
+				foreach (var domain in domains)
+				{
+					var user = new User();
+					user.CreatedBy = user.UpdatedBy = "system";
+					user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
+					user.Id = IdGenerator.NewId();
 
-				user.About = GetWords(100);
-				user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
-				user.IsAdmin = true;
-				user.IsBanned = false;
-				user.Password = Security.GenerateHashPassword("Password1");
-				user.Username = "admin";
+					user.DomainId = domain.Id;
+					user.About = GetWords(100);
+					user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
+					user.IsAdmin = true;
+					user.IsBanned = false;
+					user.Password = Security.GenerateHashPassword("Password1");
+					user.Username = "admin";
 
-				userRepository.Insert(user);
+					userRepository.Insert(user);
 
-				user = new User();
-				user.CreatedBy = user.UpdatedBy = "system";
-				user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
-				user.Id = IdGenerator.NewId();
+					user = new User();
+					user.CreatedBy = user.UpdatedBy = "system";
+					user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
+					user.Id = IdGenerator.NewId();
 
-				user.About = GetWords(100);
-				user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
-				user.IsAdmin = false;
-				user.IsBanned = false;
-				user.Password = Security.GenerateHashPassword("Password1");
-				user.Username = "user";
+					user.DomainId = domain.Id;
+					user.About = GetWords(100);
+					user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
+					user.IsAdmin = false;
+					user.IsBanned = false;
+					user.Password = Security.GenerateHashPassword("Password1");
+					user.Username = "user";
 
-				userRepository.Insert(user);
+					userRepository.Insert(user);
 
-				user = new User();
-				user.CreatedBy = user.UpdatedBy = "system";
-				user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
-				user.Id = IdGenerator.NewId();
+					user = new User();
+					user.CreatedBy = user.UpdatedBy = "system";
+					user.CreatedOn = user.UpdatedOn = DateTime.UtcNow;
+					user.Id = IdGenerator.NewId();
 
-				user.About = GetWords(100);
-				user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
-				user.IsAdmin = false;
-				user.IsBanned = true;
-				user.Password = Security.GenerateHashPassword("Password1");
-				user.Username = "banned";
+					user.DomainId = domain.Id;
+					user.About = GetWords(100);
+					user.Email = GetWords(1) + "@" + GetWords(1) + ".com";
+					user.IsAdmin = false;
+					user.IsBanned = true;
+					user.Password = Security.GenerateHashPassword("Password1");
+					user.Username = "banned";
 
-				userRepository.Insert(user);
+					userRepository.Insert(user);
+				}
 			}
 		}
 	}

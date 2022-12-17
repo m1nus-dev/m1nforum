@@ -16,7 +16,7 @@ namespace M1nforum.Web.Handlers
         {
 			// data
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
+			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
 			var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
 			var topic = Program.Cache.Business.GetTopicByIdUpdateViewCount(domain.Id, category.Id, topicId) ?? throw new PageNotFoundException("topic");
 			var comments = Program.Cache.Business.GetCommentsByTopicId(domain.Id, category.Id, topic.Id) ?? new List<Comment>();

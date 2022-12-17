@@ -53,8 +53,11 @@ namespace M1nforum.TemplateCompiler
 			// right now, this is created for this project only
 			// dynamic using statements
 			return @"using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
+using M1nforum.Web.Infrastructure.Validation;
 
 namespace M1nforum.Web.Templates
 { 

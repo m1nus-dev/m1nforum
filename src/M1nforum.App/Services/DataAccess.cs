@@ -26,7 +26,7 @@ namespace M1nforum.Web.Services
 		public Domain GetDomainByName(string name)
 		{
 			var domain = _domainRepository
-				.List(d => d.Name.Equals(name))
+				.List(d => d.Name == name)
 				.FirstOrDefault();
 
 			return domain;
@@ -42,7 +42,7 @@ namespace M1nforum.Web.Services
 		public List<Category> GetCategoriesByDomainId(ulong domainId) 
 		{
 			var categories = _categoryRepository
-				.List(c => c.DomainId.Equals(domainId))
+				.List(c => c.DomainId == domainId)
 				.OrderBy(c => c.Name)
 				.ToList();
 
@@ -61,7 +61,7 @@ namespace M1nforum.Web.Services
 		public List<Topic> GetTopicsByCategoryId(ulong domainId, ulong categoryId)
 		{
 			var topics = _topicRepository
-				.List(t => t.DomainId.Equals(domainId) && t.Categoryid == categoryId)
+				.List(t => t.DomainId == domainId && t.Categoryid == categoryId)
 				.OrderByDescending(t => t.LastActivityOn)
 				.ToList();
 
@@ -71,7 +71,7 @@ namespace M1nforum.Web.Services
 		internal Topic GetTopicById(ulong domainId, ulong categoryId, ulong topicId)
 		{
 			var topic = _topicRepository
-				.List(t => t.DomainId.Equals(domainId) && t.Categoryid == categoryId && t.Id == topicId)
+				.List(t => t.DomainId == domainId && t.Categoryid == categoryId && t.Id == topicId)
 				.FirstOrDefault();
 
 			return topic;
@@ -93,34 +93,34 @@ namespace M1nforum.Web.Services
 		internal List<Comment> GetCommentsByTopicId(ulong domainId, ulong categoryId, ulong topicId)
 		{
 			var comments = _commentRepository
-				.List(c => c.DomainId.Equals(domainId) && c.Categoryid == categoryId && c.TopicId == topicId)
+				.List(c => c.DomainId == domainId && c.Categoryid == categoryId && c.TopicId == topicId)
 				.OrderBy(c => c.CreatedOn)
 				.ToList();
 
 			return comments;
 		}
 
-		internal User GetUserByUsername(string username)
+		internal User GetUserByUsername(ulong domainId, string username)
 		{
 			var user = _userRepository
-				.List(u => u.Username == username)
+				.List(u => u.DomainId == domainId && u.Username == username)
 				.FirstOrDefault();
 
 			return user;
 		}
 
-		internal User UpdateUser(User user)
+		internal User UpdateUser(ulong domainid, User user)
 		{
 			_userRepository.Update(user);
 
-			return _userRepository.List(u => u.Id == user.Id)
+			return _userRepository.List(u => u.DomainId == domainid && u.Id == user.Id)
 				.FirstOrDefault();
 		}
 
-		internal User GetUserById(ulong userId)
+		internal User GetUserById(ulong domainId, ulong userId)
 		{
 			return _userRepository
-				.List(u => u.Id == userId)
+				.List(u => u.DomainId == domainId && u.Id == userId)
 				.FirstOrDefault();
 		}
 

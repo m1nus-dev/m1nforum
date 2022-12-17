@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
 using System.Threading.Tasks;
+using M1nforum.Web.Infrastructure.Validation;
 
 namespace M1nforum.Web.Templates
 { 
@@ -36,6 +39,13 @@ await streamWriter.WriteAsync(@"
 			<a href=""/login"">Login</a>
 			");
  } else { 
+await streamWriter.WriteAsync(@"
+				");
+ if (viewModel.IsAdmin == true) { 
+await streamWriter.WriteAsync(@"
+				<a href=""/domains"">Domains</a>
+				");
+ } 
 await streamWriter.WriteAsync(@"
 			<a href=""/logout"">Logout ");
 await streamWriter.WriteAsync(viewModel.User.Username);
@@ -110,7 +120,7 @@ await streamWriter.WriteAsync(@"
 			</tbody>
 		</table>
 		");
- if (viewModel.User != null && viewModel.User.IsAdmin == true ) { 
+ if (viewModel.IsAdmin == true) { 
 await streamWriter.WriteAsync(@"
 		<a href=""/domains/add"">New Domain</a>
 		");
@@ -142,6 +152,15 @@ await streamWriter.WriteAsync(@""">-->
 						<input class=""card w-100"" type=""text"" name=""Name"" placeholder=""Name"" value=""");
 await streamWriter.WriteAsync(viewModel.Domain.Name);
 await streamWriter.WriteAsync(@""" required />
+						");
+ foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Name")) { 
+await streamWriter.WriteAsync(@"
+						<p><b class=""error"">* ");
+await streamWriter.WriteAsync(validationException.message);
+await streamWriter.WriteAsync(@"</b></p>
+						");
+ } 
+await streamWriter.WriteAsync(@"
 					</div>
 					<div class=""col 6""></div>
 				</div>
@@ -151,6 +170,15 @@ await streamWriter.WriteAsync(@""" required />
 						<input class=""card w-100"" type=""text"" name=""Title"" placeholder=""Title"" value=""");
 await streamWriter.WriteAsync(viewModel.Domain.Title);
 await streamWriter.WriteAsync(@""" required />
+						");
+ foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Title")) { 
+await streamWriter.WriteAsync(@"
+						<p><b class=""error"">* ");
+await streamWriter.WriteAsync(validationException.message);
+await streamWriter.WriteAsync(@"</b></p>
+						");
+ } 
+await streamWriter.WriteAsync(@"
 					</div>
 					<div class=""col 6""></div>
 				</div>
@@ -159,7 +187,16 @@ await streamWriter.WriteAsync(@""" required />
 						<label for=""password"">Description:</label>
 						<input class=""card w-100"" type=""text"" name=""Description"" placeholder=""Description"" value=""");
 await streamWriter.WriteAsync(viewModel.Domain.Description);
-await streamWriter.WriteAsync(@""" required />
+await streamWriter.WriteAsync(@""" />
+						");
+ foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Description")) { 
+await streamWriter.WriteAsync(@"
+						<p><b class=""error"">* ");
+await streamWriter.WriteAsync(validationException.message);
+await streamWriter.WriteAsync(@"</b></p>
+						");
+ } 
+await streamWriter.WriteAsync(@"
 					</div>
 					<div class=""col 6""></div>
 				</div>
@@ -216,7 +253,7 @@ await streamWriter.WriteAsync(@"
 			</tbody>
 		</table>
 		");
- if (viewModel.User != null && viewModel.User.IsAdmin == true ) { 
+ if (viewModel.IsAdmin == true) { 
 await streamWriter.WriteAsync(@"
 		<a href=""/category"">new category</a>
 		");

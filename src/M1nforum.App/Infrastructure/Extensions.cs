@@ -1,10 +1,28 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
+using System.IO.Compression;
+using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace M1nforum.Web.Infrastructure
 {
+	public static class DateTimeExtensions
+	{
+		public static DateTime Truncate(this DateTime date, long resolution)
+		{
+			return new DateTime(date.Ticks - (date.Ticks % resolution), date.Kind);
+		}
+
+		// todo:  make this generic
+		public static string GetCSSFileTimestamp(this string path)
+		{
+			var timestamp = Program.Cache.CSSTimestamp ?? (Program.Cache.CSSTimestamp = File.GetLastWriteTimeUtc(path).ToString("yyyyMMddHHmmss"));
+			return timestamp;
+		}
+	}
+
 	public static class HttpExtensions
 	{
 		// todo:  this helper automatically respond 200 - make generic
@@ -24,32 +42,48 @@ namespace M1nforum.Web.Infrastructure
 			return await httpContext.StartResponse("text/html");
 		}
 
-		public static void WriteFlashMessage(this HttpContext httpContext, string type, string message)
+		//
+		// note:  these messages (and most of these cookie helpers) would usually be handled with tempdata in razor pages.  We are pushing the messages to the client instead of session.
+		//
+		public static async Task WriteFlashMessage(this HttpContext httpContext, string type, string message)
 		{
-			httpContext.Response.Cookies.Append("flash_message", type + "-" +message);
+			await httpContext.WriteCookie("flash_message", type + "-" +message, false);
 		}
 
 		public static string ReadFlashMessage(this HttpContext httpContext)
 		{
-			var message = httpContext.Request.Cookies["flash_message"];
-			httpContext.Response.Cookies.Delete("flash_message");
-
-			return message ?? string.Empty;
-		}
-	}
-
-	public static class DateTimeExtensions
-	{
-		public static DateTime Truncate(this DateTime date, long resolution)
-		{
-			return new DateTime(date.Ticks - (date.Ticks % resolution), date.Kind);
+			var value = httpContext.ReadAndDeleteCookie("flash_message", false);
+			return value;
 		}
 
-		// todo:  make this generic
-		public static string GetCSSFileTimestamp(this string path)
+		// note:  compression on cookies is more about obfuscation than compression.  Most of the time, for short strings, the compressed version is longer.
+		// Yes, it is possible to "decrypt" the message but this is not for security.  Don't pass anything sensitive.
+		public static async Task WriteCookie(this HttpContext httpContext, string key, string value, bool compress = false)
 		{
-			var timestamp = Program.Cache.CSSTimestamp ?? (Program.Cache.CSSTimestamp = File.GetLastWriteTimeUtc(path).ToString("yyyyMMddHHmmss"));
-			return timestamp;
+			if (compress)
+			{
+				value = await value.Compress();
+			}
+
+			httpContext.Response.Cookies.Append(key, value);
+		}
+
+		public static string ReadAndDeleteCookie(this HttpContext httpContext, string key, bool decompress = false)
+		{
+			var message = httpContext.Request.Cookies[key];
+			httpContext.Response.Cookies.Delete(key);
+
+			if (string.IsNullOrWhiteSpace(message))
+			{
+				return message ?? string.Empty;
+			}
+
+			if (decompress)
+			{
+				message = message.Decompress();
+			}
+
+			return message;
 		}
 	}
 
@@ -86,6 +120,57 @@ namespace M1nforum.Web.Infrastructure
 			Array.Copy(msecsArray, msecsArray.Length - 4, guidArray, guidArray.Length - 4, 4);
 
 			return new Guid(guidArray);
+		}
+	}
+
+	public static class StringExtensions
+	{
+		public async static Task<string> Compress(this string buffer)
+		{
+			using (var uncompressedStream = new MemoryStream(Encoding.UTF8.GetBytes(buffer)))
+			{
+				using (var compressedStream = new MemoryStream())
+				{
+					using (var compressorStream = new DeflateStream(compressedStream, CompressionLevel.Fastest, true))
+					{
+						await uncompressedStream.CopyToAsync(compressorStream);
+						await compressedStream.FlushAsync();
+					}
+
+					return Convert.ToBase64String(compressedStream.ToArray());
+				}
+			}
+		}
+
+		public static string Decompress(this string buffer)
+		{
+			using (var compressedStream = new MemoryStream(Convert.FromBase64String(buffer)))
+			{
+				using (var decompressorStream = new DeflateStream(compressedStream, CompressionMode.Decompress))
+				{
+					using (var decompressedStream = new MemoryStream())
+					{
+						decompressorStream.CopyTo(decompressedStream);
+
+						return Encoding.UTF8.GetString(decompressedStream.ToArray());
+					}
+				}
+			}
+		}
+
+		public static string Serialize(this object value)
+		{
+			return JsonSerializer.Serialize(value);
+		}
+
+		public static T Deserialize<T>(this string value)
+		{
+			if (string.IsNullOrEmpty(value))
+			{
+				return default(T);
+			}
+
+			return JsonSerializer.Deserialize<T>(value);
 		}
 	}
 }

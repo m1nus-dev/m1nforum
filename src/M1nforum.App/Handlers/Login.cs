@@ -13,11 +13,12 @@ namespace M1nforum.Web.Handlers
 {
 	public class Login
 	{
+		// note:  its weird to include domain in these requests.  todo:  is this correct?
 		public async Task Get(HttpContext httpContext)
 		{
 			// model
 			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var user = Program.Cache.Business.GetuserByClaims(httpContext.User);
+			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
 			var returnUrl = (string)httpContext.Request.Query["ReturnURL"] ?? "/";
 
 			if (user != null)
@@ -75,25 +76,25 @@ namespace M1nforum.Web.Handlers
 
 			if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
 			{
-				httpContext.WriteFlashMessage("error", "Username and password required.");
+				await httpContext.WriteFlashMessage("error", "Username and password required.");
 				httpContext.Response.Redirect("login?ReturnURL=" + returnUrl, false);
 				return;
 			}
 
 			if (username.Length > 200 || password.Length > 200)
 			{
-				httpContext.WriteFlashMessage("error", "Username or password too long.");
+				await httpContext.WriteFlashMessage("error", "Username or password too long.");
 				httpContext.Response.Redirect("login?ReturnURL=" + returnUrl, false);
 				return;
 			}
 
 			// todo:  csrf
 
-			var user = Program.Cache.Business.Login(username, password);
+			var user = Program.Cache.Business.Login(domain.Id, username, password);
 
 			if (user == null)
 			{
-				httpContext.WriteFlashMessage("error", "Unable to login with those credentials.");
+				await httpContext.WriteFlashMessage("error", "Unable to login with those credentials.");
 				httpContext.Response.Redirect("login?ReturnURL=" + returnUrl, false);
 				return;
 			}
