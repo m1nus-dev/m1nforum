@@ -83,10 +83,11 @@ This project is licensed under the MIT License - see the LICENSE.txt file for de
 
 ## Acknowledgments
 
-Inspiration, code snippets, etc.
+Inspiration, code, etc from these sites, among others.
 * Inspired by [orange forum](https://github.com/s-gv/orangeforum) 
 > This is an attempt to combat the website obesity crisis and reduce web bloat.
 * [mincss](http://mincss.com/) - we rarely need much more than this
 * [Free Azure App Service](https://azure.microsoft.com/en-in/products/app-service/)
 * Visual Studio - you could write this all in vscode.  I use visual studio.
 * [Mads Web Compiler](https://marketplace.visualstudio.com/items?itemName=MadsKristensen.WebCompiler) - you could just use npm but I am lazy so this minifies my css for me in visual studio without effort.
+* Validation code and ideas taken from https://github.com/FluentValidation/FluentValidation and https://github.com/runeapetersen/ArgumentValidator

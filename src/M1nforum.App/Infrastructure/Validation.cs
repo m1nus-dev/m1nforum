@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
+// ideas and code taken from:
+// https://github.com/runeapetersen/ArgumentValidator
+// https://github.com/FluentValidation/FluentValidation
+
 namespace M1nforum.Web.Infrastructure.Validation
 {
 	public class Validation
