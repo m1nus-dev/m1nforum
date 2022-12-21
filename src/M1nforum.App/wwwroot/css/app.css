@@ -198,7 +198,7 @@ pre {
 
 	.row {
 		display: table;
-		border-spacing: 1em 0;
+		border-spacing: 0em 0; // todo:  does this break everything
 	}
 }
 

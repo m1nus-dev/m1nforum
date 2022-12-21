@@ -8,8 +8,6 @@ M1nforum is a fun exercise - nothing more.
 
 There is a live version on the free tier in azure here:  [minforum.azurewebsites.net](https://m1nforum.azurewebsites.net/).  This is running on the F1 app service plan so who knows how long it will be up and available.  I'm curious to see what you get with the free tier in Azure. (60 CPU minutes / day).  And, since its a windows host and all the data is in memory, I am sure it is memory starved.  Once it loads, I am sure it will be fast.  :)
 
-~~Synchronous IO is a problem on azure like it is in debug on localhost.  Ill look into that - there are no synchronous writes in the code.~~ The synchronous IO problem is solved here.  [stack overflow](https://stackoverflow.com/questions/47735133/asp-net-core-synchronous-operations-are-disallowed-call-writeasync-or-set-all).  I have never seen `await using` before.
-
 There is also a problem with the seed function.  I'm not sure what it is, but its not consistent.
 
 There is a focus on minimalism and speed
@@ -18,14 +16,14 @@ There is a focus on minimalism and speed
 - The data is from an xml file on disk but it is all cached.  
 - There is no dependency on a database.
 - There is use of caching headers in every http handler method.
-- The css is from the smallest css library I could find and its awesome [mincss.com](https://mincss.com/).  Should consider classless instead.  Maybe with 2 or 3 helpers.
+- The css is custom between [mincss.com](https://mincss.com/) and [the small lit/utl libraries](https://ajusa.github.io/lit/).
 - There is no javascript.
 - MapGet is used - no razorpages or mvc or razor.
 - Everything is minimal and fast
 - Lots of things are done the manual/old school way.  For example, use of httpContext, custom view engine, xml data store.  There are better, tested libraries for all of this functionality.
+- There is a dependency on cookies now so we dont have to use session.
 
 It is not finished.  
-- No write capability - cant create any content via the UI yet
 - No user management - cant even create an account
 - No search
 - No database
@@ -61,8 +59,7 @@ There is a seed method and most of the content or title fields are random words.
 
 ### Odd Info
 
-* This uses an html file and string parsing for a custom view engine
-* The template is copied to the bin folder on build of the soluution - old school with a build event and a .cmd file.
+* The domain management stuff is weird.  You have to be an admin in a domain to edit domains?  todo:  fix this
 
 ## Help
 

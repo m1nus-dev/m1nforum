@@ -15,10 +15,10 @@ namespace M1nforum.Web.Handlers
         public async Task Get(HttpContext httpContext, ulong categoryId)
         {
 			// model
-			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
-			var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
-			var topics = Program.Cache.Business.GetTopicsByCategoryId(domain.Id, category.Id) ?? new List<Topic>();
+			var domain = Program.Cache.Business.DomainGetFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.UserGetByClaims(domain.Id, httpContext.User);
+			var category = Program.Cache.Business.CategoryGetById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
+			var topics = Program.Cache.Business.TopicsGetByCategoryId(domain.Id, category.Id) ?? new List<Topic>();
 			var isAdmin = user?.IsAdmin == true && user?.IsBanned == false;
 
 			// cache
@@ -32,15 +32,13 @@ namespace M1nforum.Web.Handlers
 			{
 				await body.WriteDocumentHeader(new
 				{
-					CSSFilename = Program.Cache.DebuggingEnabled ?
-						"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
-						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(),
+					GetCSSFileUrl = Program.Cache.GetCSSFileUrl(),
 					FlashMessage = httpContext.ReadFlashMessage(), 
-					Header = domain.Title,
+					PageHeader = domain.Title,
 					IsAdmin = isAdmin, 
 					SiteName = domain.Title,
-					Subheader = domain.Description,
-					Title = "Categories - " + domain.Title,
+					PageSubheader = domain.Description,
+					PageTitle = "Categories - " + domain.Title,
 					User = user
 				});
 
@@ -53,7 +51,7 @@ namespace M1nforum.Web.Handlers
 
 				await body.WriteDocumentFooter(new
 				{
-					domain.Title,
+					PageTitle = domain.Title,
 					GeneratedOn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")
 				});
 			}

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using M1nforum.Web.Services.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.IO.Compression;
@@ -13,13 +14,6 @@ namespace M1nforum.Web.Infrastructure
 		public static DateTime Truncate(this DateTime date, long resolution)
 		{
 			return new DateTime(date.Ticks - (date.Ticks % resolution), date.Kind);
-		}
-
-		// todo:  make this generic
-		public static string GetCSSFileTimestamp(this string path)
-		{
-			var timestamp = Program.Cache.CSSTimestamp ?? (Program.Cache.CSSTimestamp = File.GetLastWriteTimeUtc(path).ToString("yyyyMMddHHmmss"));
-			return timestamp;
 		}
 	}
 
@@ -171,6 +165,14 @@ namespace M1nforum.Web.Infrastructure
 			}
 
 			return JsonSerializer.Deserialize<T>(value);
+		}
+	}
+
+	public static class UserExtensions
+	{
+		public static User AsAdmin(this User user)
+		{
+			return Program.Cache.Business.UserIsAdmin(user) ? user : null;
 		}
 	}
 }

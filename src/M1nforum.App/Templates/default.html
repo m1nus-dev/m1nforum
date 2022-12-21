@@ -5,8 +5,8 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<meta name="description" content="M1nforum example site">
-	<title><%= viewModel.Title %></title>
-	<link rel="stylesheet" href="/css/<%= viewModel.CSSFilename %>" />
+	<title><%= viewModel.PageTitle %></title>
+	<link rel="stylesheet" href="/css/<%= Program.Cache.GetCSSFileUrl() %>" />
 </head>
 <body>
 	<nav class="nav" tabindex="-1" onclick="this.focus()">
@@ -24,8 +24,8 @@
 		</div>
 	</nav>
 	<div class="container">
-		<h1 class="mb0"><%= viewModel.Header %></h1>
-		<p class="mt0"><%= viewModel.Subheader %></p>
+		<h1 class="mb0"><%= viewModel.PageHeader %></h1>
+		<p class="mt0"><%= viewModel.PageSubheader %></p>
 	</div>
 
 	<% if (viewModel.FlashMessage != "") { var messageType = viewModel.FlashMessage.Split("-", 2)[0]; var messageBody = viewModel.FlashMessage.Split("-", 2)[1]; %>
@@ -40,73 +40,101 @@
 
 <!-- template_Domains -->
 	<div class="container">
-		<h2>Domains</h2>
+		<% if (viewModel.IsAdmin == true) { %>
+		<a href="/domains/add">New Domain</a>
+		<% } %>
 		<table class="table">
 			<thead>
 				<tr>
 					<th>Name</th>
 					<th>Title</th>
 					<th>Description</th>
+					<th>Tasks</th>
 				</tr>
 			</thead>
 			<tbody>
 				<% for (var counter = 0; counter < viewModel.Domains.Count; counter++) {
-					var domain = viewModel.Domains[counter]; %>				
+				var domain = viewModel.Domains[counter]; %>
 				<tr>
-					<td><a href="/domains/<%= domain.Id.ToString() %>"><%= domain.Name %></a></td>
+					<td><a href="/domains/read/<%= domain.Id.ToString() %>"><%= domain.Name %></a></td>
 					<td><%= domain.Title %></td>
 					<td><%= domain.Description %></td>
+					<td><a href="/domains/edit/<%= domain.Id.ToString() %>">Edit</a> <a class="warning" href="/domains/delete/<%= domain.Id.ToString() %>">Delete</a> </td>
 				</tr>
 				<% } %>
 			</tbody>
 		</table>
-		<% if (viewModel.IsAdmin == true) { %>
-		<a href="/domains/add">New Domain</a>
-		<% } %>
 	</div>
 <!-- /template_Domains -->
 
+
+<!--
+variables:
+Action
+IsReadonly
+ActionButton
+Domain
+ValidationExceptions
+-->
 <!-- template_Domain -->
 	<div class="container">
-		<h2><%= viewModel.ActionTitle %> Domain</h2>
+		<!-- todo:  message -->
 
-		<form action="/domains/<%= viewModel.Action %>" method="POST">
+		<form action="<%= viewModel.Action %>" method="POST">
+			<input type="hidden" name="Id" value="<%= viewModel.Domain.Id.ToString() %>" />
 			<fieldset class="b0 m0 p0">
-				<!--<input type="hidden" name="csrf" value="<%= viewModel.CSRF %>">-->
+				<!-- todo:  csrf -->
 				<div class="row">
 					<div class="col 6">
-						<label for="Name">Name:</label>
-						<input class="card w-100" type="text" name="Name" placeholder="Name" value="<%= viewModel.Domain.Name %>" required />
-						<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Name")) { %>
-						<p><b class="error">* <%= validationException.message %></b></p>
+						<% if (viewModel.IsReadonly) { %>
+							<p><strong>Name:</strong>  <%= viewModel.Domain.Name %></p>
+						<% } else { %>
+							<label for="Name">Name:</label>
+							<input class="card w-100" type="text" name="Name" placeholder="Name" value="<%= viewModel.Domain.Name %>" required />
+							<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Name")) { %>
+							<p><b class="error">* <%= validationException.message %></b></p>
+							<% } %>
 						<% } %>
 					</div>
 					<div class="col 6"></div>
 				</div>
 				<div class="row">
 					<div class="col 6">
-						<label for="Name">Title:</label>
-						<input class="card w-100" type="text" name="Title" placeholder="Title" value="<%= viewModel.Domain.Title %>" required />
-						<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Title")) { %>
-						<p><b class="error">* <%= validationException.message %></b></p>
+						<% if (viewModel.IsReadonly) { %>
+							<p><strong>Title:</strong>  <%= viewModel.Domain.Title %></p>
+						<% } else { %>
+							<label for="Name">Title:</label>
+							<input class="card w-100" type="text" name="Title" placeholder="Title" value="<%= viewModel.Domain.Title %>" required />
+							<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Title")) { %>
+							<p><b class="error">* <%= validationException.message %></b></p>
+							<% } %>
 						<% } %>
 					</div>
 					<div class="col 6"></div>
 				</div>
 				<div class="row">
 					<div class="col 6">
-						<label for="password">Description:</label>
-						<input class="card w-100" type="text" name="Description" placeholder="Description" value="<%= viewModel.Domain.Description %>" />
-						<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Description")) { %>
-						<p><b class="error">* <%= validationException.message %></b></p>
+						<% if (viewModel.IsReadonly) { %>
+							<p><strong>Description:</strong>  <%= viewModel.Domain.Description %></p>
+						<% } else { %>
+							<label for="Description">Description:</label>
+							<input class="card w-100" type="text" name="Description" placeholder="Description" value="<%= viewModel.Domain.Description %>" />
+							<% foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Description")) { %>
+							<p><b class="error">* <%= validationException.message %></b></p>
+							<% } %>
 						<% } %>
 					</div>
 					<div class="col 6"></div>
 				</div>
+
 				<div class="row">
 					<div class="col 6">
-						<input class="btn primary" type="submit" value="<%= viewModel.ActionTitle %>" />
-						<a href="/domains">Cancel</a>
+						<% if (viewModel.ActionButton != "") { %>
+						<input class="btn primary" type="submit" value="<%= viewModel.ActionButton %>" />
+						<a href="/domains">Back To List</a>
+						<% } else { %>
+						<a href="/domains/edit/<%= viewModel.Domain.Id.ToString() %>">Edit</a> | <a href="/domains">Back To List</a>
+						<% }%>
 					</div>
 					<div class="col 6"></div>
 				</div>
@@ -116,10 +144,11 @@
 <!-- /template_Domain -->
 
 
-
 <!-- template_Categories -->
 	<div class="container">
-		<h2>Categories</h2>
+		<% if (viewModel.IsAdmin == true) { %>
+		<a href="/category">new category</a>
+		<% } %>
 		<table class="table">
 			<thead>
 				<tr>
@@ -130,7 +159,7 @@
 			</thead>
 			<tbody>
 				<% for (var counter = 0; counter < viewModel.Categories.Count; counter++) {
-					var category = viewModel.Categories[counter]; %>				
+				var category = viewModel.Categories[counter]; %>
 				<tr>
 					<td><a href="/categories/<%= category.Id.ToString() %>"><%= category.Name %></a><br /><%= category.Description %></td>
 					<td><%= category.TopicCountCache.ToString() %></td>
@@ -139,9 +168,6 @@
 				<% } %>
 			</tbody>
 		</table>
-		<% if (viewModel.IsAdmin == true) { %>
-		<a href="/category">new category</a>
-		<% } %>
 	</div>
 <!-- /template_Categories -->
 
@@ -209,7 +235,7 @@
 				</div>
 				<div class="row">
 					<div class="col 6">
-						<input class="btn primary" type="submit" value="Login" />
+						<input class="btn primary" type="submit" value="Save" />
 					</div>
 					<div class="col 6"></div>
 				</div>
@@ -312,7 +338,7 @@
 
 <!-- template_DocumentFooter -->
 	<div class="mt1 bg-lightgray p2">
-		<div class="container"><%= viewModel.Title %> | generated on <%= viewModel.GeneratedOn %></div>
+		<div class="container">&copy; <%= DateTime.Now.Year.ToString() %> - <%= viewModel.PageTitle %></div>
 	</div>
 	<script>
 	</script>

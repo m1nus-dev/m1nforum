@@ -15,11 +15,12 @@ namespace M1nforum.Web.Handlers
         public async Task Get(HttpContext httpContext, ulong categoryId, ulong topicId)
         {
 			// data
-			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
-			var category = Program.Cache.Business.GetCategoryById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
-			var topic = Program.Cache.Business.GetTopicByIdUpdateViewCount(domain.Id, category.Id, topicId) ?? throw new PageNotFoundException("topic");
-			var comments = Program.Cache.Business.GetCommentsByTopicId(domain.Id, category.Id, topic.Id) ?? new List<Comment>();
+			var domain = Program.Cache.Business.DomainGetFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.UserGetByClaims(domain.Id, httpContext.User);
+			var category = Program.Cache.Business.CategoryGetById(domain.Id, categoryId) ?? throw new PageNotFoundException("category");
+			var topic = Program.Cache.Business.TopicGetByIdUpdateViewCount(domain.Id, category.Id, topicId) ?? throw new PageNotFoundException("topic");
+			var comments = Program.Cache.Business.CommentsGetByTopicId(domain.Id, category.Id, topic.Id) ?? new List<Comment>();
+			var isAdmin = user?.IsAdmin == true && user?.IsBanned == false;
 
 			// cache
 			if (!Program.Cache.DebuggingEnabled && httpContext.CacheContent(comments.Max(c => c.UpdatedOn))) // todo:  this is probably the wrong sort
@@ -32,27 +33,27 @@ namespace M1nforum.Web.Handlers
 			{
 				await body.WriteDocumentHeader(new
                 {
-					User = user,
+					GetCSSFileUrl = Program.Cache.GetCSSFileUrl(),
+					FlashMessage = httpContext.ReadFlashMessage(), 
+					IsAdmin = isAdmin, 
+					PageHeader = domain.Title,
 					SiteName = domain.Title,
-                    Title = "Categories - " + domain.Title,
-                    CSSFilename = Program.Cache.DebuggingEnabled ?
-                        "app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
-                        "app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(), 
-                    Header = domain.Title,
-                    Subheader = domain.Description,
-					FlashMessage = httpContext.ReadFlashMessage()
+					PageSubheader = domain.Description,
+					PageTitle = "Categories - " + domain.Title,
+					User = user
 				});
 
                 await body.WriteComments(new
                 {
 					Category = category,
                     Topic = topic,
+					isAdmin= isAdmin,
                     Comments = comments
                 });
 
                 await body.WriteDocumentFooter(new
 				{
-					domain.Title,
+					PageTitle = domain.Title,
 					GeneratedOn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")
 				});
             }

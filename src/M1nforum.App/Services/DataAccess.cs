@@ -1,6 +1,5 @@
 ﻿using M1nforum.Web.Services.Entities;
 using M1nforum.Web.Services.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +22,7 @@ namespace M1nforum.Web.Services
 			_userRepository = userRepository;
 		}
 
-		public Domain GetDomainByName(string name)
+		public Domain DomainGetByName(string name)
 		{
 			var domain = _domainRepository
 				.List(d => d.Name == name)
@@ -32,14 +31,14 @@ namespace M1nforum.Web.Services
 			return domain;
 		}
 
-		internal List<Domain> GetDomains()
+		internal List<Domain> DomainsList()
 		{
 			return _domainRepository
 				.List();
 		}
 
 
-		public List<Category> GetCategoriesByDomainId(ulong domainId) 
+		public List<Category> CategoriesGetByDomainId(ulong domainId) 
 		{
 			var categories = _categoryRepository
 				.List(c => c.DomainId == domainId)
@@ -49,7 +48,7 @@ namespace M1nforum.Web.Services
 			return categories;
 		}
 
-		public Category GetCategoryById(ulong domainId, ulong categoryId)
+		public Category CategoryGetById(ulong domainId, ulong categoryId)
 		{
 			var category = _categoryRepository
 				.List(c => c.Id == categoryId && c.DomainId == domainId)
@@ -58,7 +57,7 @@ namespace M1nforum.Web.Services
 			return category;
 		}
 
-		public List<Topic> GetTopicsByCategoryId(ulong domainId, ulong categoryId)
+		public List<Topic> TopicsGetByCategoryId(ulong domainId, ulong categoryId)
 		{
 			var topics = _topicRepository
 				.List(t => t.DomainId == domainId && t.Categoryid == categoryId)
@@ -68,7 +67,7 @@ namespace M1nforum.Web.Services
 			return topics;
 		}
 
-		internal Topic GetTopicById(ulong domainId, ulong categoryId, ulong topicId)
+		internal Topic TopicGetById(ulong domainId, ulong categoryId, ulong topicId)
 		{
 			var topic = _topicRepository
 				.List(t => t.DomainId == domainId && t.Categoryid == categoryId && t.Id == topicId)
@@ -77,9 +76,9 @@ namespace M1nforum.Web.Services
 			return topic;
 		}
 
-		internal Topic GetTopicByIdUpdateViewCount(ulong domainId, ulong categoryId, ulong topicId)
+		internal Topic TopicGetByIdUpdateViewCount(ulong domainId, ulong categoryId, ulong topicId)
 		{
-			var topic = GetTopicById(domainId, categoryId, topicId);
+			var topic = TopicGetById(domainId, categoryId, topicId);
 
 			if (topic != null)
 			{
@@ -90,7 +89,7 @@ namespace M1nforum.Web.Services
 			return topic;
 		}
 
-		internal List<Comment> GetCommentsByTopicId(ulong domainId, ulong categoryId, ulong topicId)
+		internal List<Comment> CommentsGetByTopicId(ulong domainId, ulong categoryId, ulong topicId)
 		{
 			var comments = _commentRepository
 				.List(c => c.DomainId == domainId && c.Categoryid == categoryId && c.TopicId == topicId)
@@ -100,7 +99,7 @@ namespace M1nforum.Web.Services
 			return comments;
 		}
 
-		internal User GetUserByUsername(ulong domainId, string username)
+		internal User UserGetByUsername(ulong domainId, string username)
 		{
 			var user = _userRepository
 				.List(u => u.DomainId == domainId && u.Username == username)
@@ -109,7 +108,7 @@ namespace M1nforum.Web.Services
 			return user;
 		}
 
-		internal User UpdateUser(ulong domainid, User user)
+		internal User UserUpdate(ulong domainid, User user)
 		{
 			_userRepository.Update(user);
 
@@ -117,16 +116,32 @@ namespace M1nforum.Web.Services
 				.FirstOrDefault();
 		}
 
-		internal User GetUserById(ulong domainId, ulong userId)
+		internal User UserGetById(ulong domainId, ulong userId)
 		{
 			return _userRepository
 				.List(u => u.DomainId == domainId && u.Id == userId)
 				.FirstOrDefault();
 		}
 
-		internal void InsertDomain(Domain domain)
+		internal void DomainInsert(Domain domain)
 		{
 			_domainRepository.Insert(domain);
+		}
+
+		internal Domain DomainGetByDomainId(ulong domainId)
+		{
+			return _domainRepository.List(d => d.Id == domainId)
+				.FirstOrDefault();
+		}
+
+		internal void DomainUpdate(Domain domain)
+		{
+			_domainRepository.Update(domain);
+		}
+
+		internal void DomainDelete(ulong domainId)
+		{
+			_domainRepository.Delete(d => d.Id == domainId);
 		}
 	}
 }

@@ -20,10 +20,10 @@ namespace M1nforum.Web.Templates
 	<meta name=""viewport"" content=""width=device-width, initial-scale=1, shrink-to-fit=no"">
 	<meta name=""description"" content=""M1nforum example site"">
 	<title>");
-await streamWriter.WriteAsync(viewModel.Title);
+await streamWriter.WriteAsync(viewModel.PageTitle);
 await streamWriter.WriteAsync(@"</title>
 	<link rel=""stylesheet"" href=""/css/");
-await streamWriter.WriteAsync(viewModel.CSSFilename);
+await streamWriter.WriteAsync(Program.Cache.GetCSSFileUrl());
 await streamWriter.WriteAsync(@""" />
 </head>
 <body>
@@ -57,10 +57,10 @@ await streamWriter.WriteAsync(@"
 	</nav>
 	<div class=""container"">
 		<h1 class=""mb0"">");
-await streamWriter.WriteAsync(viewModel.Header);
+await streamWriter.WriteAsync(viewModel.PageHeader);
 await streamWriter.WriteAsync(@"</h1>
 		<p class=""mt0"">");
-await streamWriter.WriteAsync(viewModel.Subheader);
+await streamWriter.WriteAsync(viewModel.PageSubheader);
 await streamWriter.WriteAsync(@"</p>
 	</div>
 
@@ -87,22 +87,29 @@ await streamWriter.WriteAsync(@"
 	{
 		await streamWriter.WriteAsync(@"
 	<div class=""container"">
-		<h2>Domains</h2>
+		");
+ if (viewModel.IsAdmin == true) { 
+await streamWriter.WriteAsync(@"
+		<a href=""/domains/add"">New Domain</a>
+		");
+ } 
+await streamWriter.WriteAsync(@"
 		<table class=""table"">
 			<thead>
 				<tr>
 					<th>Name</th>
 					<th>Title</th>
 					<th>Description</th>
+					<th>Tasks</th>
 				</tr>
 			</thead>
 			<tbody>
 				");
  for (var counter = 0; counter < viewModel.Domains.Count; counter++) {
-					var domain = viewModel.Domains[counter]; 
-await streamWriter.WriteAsync(@"				
+				var domain = viewModel.Domains[counter]; 
+await streamWriter.WriteAsync(@"
 				<tr>
-					<td><a href=""/domains/");
+					<td><a href=""/domains/read/");
 await streamWriter.WriteAsync(domain.Id.ToString());
 await streamWriter.WriteAsync(@""">");
 await streamWriter.WriteAsync(domain.Name);
@@ -113,20 +120,18 @@ await streamWriter.WriteAsync(@"</td>
 					<td>");
 await streamWriter.WriteAsync(domain.Description);
 await streamWriter.WriteAsync(@"</td>
+					<td><a href=""/domains/edit/");
+await streamWriter.WriteAsync(domain.Id.ToString());
+await streamWriter.WriteAsync(@""">Edit</a> <a class=""warning"" href=""/domains/delete/");
+await streamWriter.WriteAsync(domain.Id.ToString());
+await streamWriter.WriteAsync(@""">Delete</a> </td>
 				</tr>
 				");
  } 
+
 await streamWriter.WriteAsync(@"
 			</tbody>
 		</table>
-		");
- if (viewModel.IsAdmin == true) { 
-await streamWriter.WriteAsync(@"
-		<a href=""/domains/add"">New Domain</a>
-		");
- } 
-
-await streamWriter.WriteAsync(@"
 	</div>
 ");
 	} 
@@ -135,29 +140,40 @@ await streamWriter.WriteAsync(@"
 	{
 		await streamWriter.WriteAsync(@"
 	<div class=""container"">
-		<h2>");
-await streamWriter.WriteAsync(viewModel.ActionTitle);
-await streamWriter.WriteAsync(@" Domain</h2>
+		<!-- todo:  message -->
 
-		<form action=""/domains/");
+		<form action=""");
 await streamWriter.WriteAsync(viewModel.Action);
 await streamWriter.WriteAsync(@""" method=""POST"">
+			<input type=""hidden"" name=""Id"" value=""");
+await streamWriter.WriteAsync(viewModel.Domain.Id.ToString());
+await streamWriter.WriteAsync(@""" />
 			<fieldset class=""b0 m0 p0"">
-				<!--<input type=""hidden"" name=""csrf"" value=""");
-await streamWriter.WriteAsync(viewModel.CSRF);
-await streamWriter.WriteAsync(@""">-->
+				<!-- todo:  csrf -->
 				<div class=""row"">
 					<div class=""col 6"">
-						<label for=""Name"">Name:</label>
-						<input class=""card w-100"" type=""text"" name=""Name"" placeholder=""Name"" value=""");
+						");
+ if (viewModel.IsReadonly) { 
+await streamWriter.WriteAsync(@"
+							<p><strong>Name:</strong>  ");
+await streamWriter.WriteAsync(viewModel.Domain.Name);
+await streamWriter.WriteAsync(@"</p>
+						");
+ } else { 
+await streamWriter.WriteAsync(@"
+							<label for=""Name"">Name:</label>
+							<input class=""card w-100"" type=""text"" name=""Name"" placeholder=""Name"" value=""");
 await streamWriter.WriteAsync(viewModel.Domain.Name);
 await streamWriter.WriteAsync(@""" required />
-						");
+							");
  foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Name")) { 
 await streamWriter.WriteAsync(@"
-						<p><b class=""error"">* ");
+							<p><b class=""error"">* ");
 await streamWriter.WriteAsync(validationException.message);
 await streamWriter.WriteAsync(@"</b></p>
+							");
+ } 
+await streamWriter.WriteAsync(@"
 						");
  } 
 await streamWriter.WriteAsync(@"
@@ -166,16 +182,28 @@ await streamWriter.WriteAsync(@"
 				</div>
 				<div class=""row"">
 					<div class=""col 6"">
-						<label for=""Name"">Title:</label>
-						<input class=""card w-100"" type=""text"" name=""Title"" placeholder=""Title"" value=""");
+						");
+ if (viewModel.IsReadonly) { 
+await streamWriter.WriteAsync(@"
+							<p><strong>Title:</strong>  ");
+await streamWriter.WriteAsync(viewModel.Domain.Title);
+await streamWriter.WriteAsync(@"</p>
+						");
+ } else { 
+await streamWriter.WriteAsync(@"
+							<label for=""Name"">Title:</label>
+							<input class=""card w-100"" type=""text"" name=""Title"" placeholder=""Title"" value=""");
 await streamWriter.WriteAsync(viewModel.Domain.Title);
 await streamWriter.WriteAsync(@""" required />
-						");
+							");
  foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Title")) { 
 await streamWriter.WriteAsync(@"
-						<p><b class=""error"">* ");
+							<p><b class=""error"">* ");
 await streamWriter.WriteAsync(validationException.message);
 await streamWriter.WriteAsync(@"</b></p>
+							");
+ } 
+await streamWriter.WriteAsync(@"
 						");
  } 
 await streamWriter.WriteAsync(@"
@@ -184,29 +212,54 @@ await streamWriter.WriteAsync(@"
 				</div>
 				<div class=""row"">
 					<div class=""col 6"">
-						<label for=""password"">Description:</label>
-						<input class=""card w-100"" type=""text"" name=""Description"" placeholder=""Description"" value=""");
+						");
+ if (viewModel.IsReadonly) { 
+await streamWriter.WriteAsync(@"
+							<p><strong>Description:</strong>  ");
+await streamWriter.WriteAsync(viewModel.Domain.Description);
+await streamWriter.WriteAsync(@"</p>
+						");
+ } else { 
+await streamWriter.WriteAsync(@"
+							<label for=""Description"">Description:</label>
+							<input class=""card w-100"" type=""text"" name=""Description"" placeholder=""Description"" value=""");
 await streamWriter.WriteAsync(viewModel.Domain.Description);
 await streamWriter.WriteAsync(@""" />
-						");
+							");
  foreach (var validationException in (viewModel.ValidationExceptions as List<ValidationException>).Where(ve => ve.parameterName == "Description")) { 
 await streamWriter.WriteAsync(@"
-						<p><b class=""error"">* ");
+							<p><b class=""error"">* ");
 await streamWriter.WriteAsync(validationException.message);
 await streamWriter.WriteAsync(@"</b></p>
+							");
+ } 
+await streamWriter.WriteAsync(@"
 						");
  } 
 await streamWriter.WriteAsync(@"
 					</div>
 					<div class=""col 6""></div>
 				</div>
+
 				<div class=""row"">
 					<div class=""col 6"">
+						");
+ if (viewModel.ActionButton != "") { 
+await streamWriter.WriteAsync(@"
 						<input class=""btn primary"" type=""submit"" value=""");
-await streamWriter.WriteAsync(viewModel.ActionTitle);
-
+await streamWriter.WriteAsync(viewModel.ActionButton);
 await streamWriter.WriteAsync(@""" />
-						<a href=""/domains"">Cancel</a>
+						<a href=""/domains"">Back To List</a>
+						");
+ } else { 
+await streamWriter.WriteAsync(@"
+						<a href=""/domains/edit/");
+await streamWriter.WriteAsync(viewModel.Domain.Id.ToString());
+await streamWriter.WriteAsync(@""">Edit</a> | <a href=""/domains"">Back To List</a>
+						");
+ }
+
+await streamWriter.WriteAsync(@"
 					</div>
 					<div class=""col 6""></div>
 				</div>
@@ -220,7 +273,13 @@ await streamWriter.WriteAsync(@""" />
 	{
 		await streamWriter.WriteAsync(@"
 	<div class=""container"">
-		<h2>Categories</h2>
+		");
+ if (viewModel.IsAdmin == true) { 
+await streamWriter.WriteAsync(@"
+		<a href=""/category"">new category</a>
+		");
+ } 
+await streamWriter.WriteAsync(@"
 		<table class=""table"">
 			<thead>
 				<tr>
@@ -232,8 +291,8 @@ await streamWriter.WriteAsync(@""" />
 			<tbody>
 				");
  for (var counter = 0; counter < viewModel.Categories.Count; counter++) {
-					var category = viewModel.Categories[counter]; 
-await streamWriter.WriteAsync(@"				
+				var category = viewModel.Categories[counter]; 
+await streamWriter.WriteAsync(@"
 				<tr>
 					<td><a href=""/categories/");
 await streamWriter.WriteAsync(category.Id.ToString());
@@ -249,17 +308,10 @@ await streamWriter.WriteAsync(@"</td>
 				</tr>
 				");
  } 
+
 await streamWriter.WriteAsync(@"
 			</tbody>
 		</table>
-		");
- if (viewModel.IsAdmin == true) { 
-await streamWriter.WriteAsync(@"
-		<a href=""/category"">new category</a>
-		");
- } 
-
-await streamWriter.WriteAsync(@"
 	</div>
 ");
 	} 
@@ -334,7 +386,7 @@ await streamWriter.WriteAsync(@""">Signup</a> : <a href=""/forgotpass"">Forgot p
 				</div>
 				<div class=""row"">
 					<div class=""col 6"">
-						<input class=""btn primary"" type=""submit"" value=""Login"" />
+						<input class=""btn primary"" type=""submit"" value=""Save"" />
 					</div>
 					<div class=""col 6""></div>
 				</div>
@@ -494,10 +546,10 @@ await streamWriter.WriteAsync(@""">Signup</a> : <a href=""/forgotpass"">Forgot p
 	{
 		await streamWriter.WriteAsync(@"
 	<div class=""mt1 bg-lightgray p2"">
-		<div class=""container"">");
-await streamWriter.WriteAsync(viewModel.Title);
-await streamWriter.WriteAsync(@" | generated on ");
-await streamWriter.WriteAsync(viewModel.GeneratedOn);
+		<div class=""container"">&copy; ");
+await streamWriter.WriteAsync(DateTime.Now.Year.ToString());
+await streamWriter.WriteAsync(@" - ");
+await streamWriter.WriteAsync(viewModel.PageTitle);
 
 await streamWriter.WriteAsync(@"</div>
 	</div>

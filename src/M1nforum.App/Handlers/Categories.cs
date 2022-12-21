@@ -15,9 +15,9 @@ namespace M1nforum.Web.Handlers
 		public async Task Browse(HttpContext httpContext)
 		{
 			// model
-			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
-			var categories = Program.Cache.Business.GetCategoriesByDomainId(domain.Id) ?? new List<Category>();
+			var domain = Program.Cache.Business.DomainGetFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.UserGetByClaims(domain.Id, httpContext.User);
+			var categories = Program.Cache.Business.CategoriesGetByDomainId(domain.Id) ?? new List<Category>();
 			var isAdmin = user?.IsAdmin == true && user?.IsBanned == false;
 
 			// cache - do not cache if debugging is enabled - caching is difficult.  The data may not have changed but the css changed and this would cache that bad css. It is a trade off and inperfect.
@@ -31,15 +31,13 @@ namespace M1nforum.Web.Handlers
 			{
 				await body.WriteDocumentHeader(new
 				{
-					CSSFilename = Program.Cache.DebuggingEnabled ?
-						"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
-						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(),
+					GetCSSFileUrl = Program.Cache.GetCSSFileUrl(), 
 					FlashMessage = httpContext.ReadFlashMessage(), 
-					Header = domain.Title,
+					PageHeader = domain.Title,
 					IsAdmin = isAdmin, 
 					SiteName = domain.Title,
-					Subheader = domain.Description,
-					Title = "Categories - " + domain.Title,
+					PageSubheader = domain.Description,
+					PageTitle = "Categories - " + domain.Title,
 					User = user
 				});
 
@@ -53,7 +51,7 @@ namespace M1nforum.Web.Handlers
 
 				await body.WriteDocumentFooter(new
 				{
-					domain.Title,
+					PageTitle = domain.Title,
 					GeneratedOn = DateTime.Now.ToString("MM/dd/yyyy HH:mm:ss")
 				});
 			}

@@ -17,8 +17,8 @@ namespace M1nforum.Web.Handlers
 		public async Task Get(HttpContext httpContext)
 		{
 			// model
-			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
-			var user = Program.Cache.Business.GetUserByClaims(domain.Id, httpContext.User);
+			var domain = Program.Cache.Business.DomainGetFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var user = Program.Cache.Business.UserGetByClaims(domain.Id, httpContext.User);
 			var returnUrl = (string)httpContext.Request.Query["ReturnURL"] ?? "/";
 
 			if (user != null)
@@ -32,15 +32,13 @@ namespace M1nforum.Web.Handlers
 			{
 				await body.WriteDocumentHeader(new
 				{
-					User = user,
+					GetCSSFileUrl = Program.Cache.GetCSSFileUrl(),
+					FlashMessage = httpContext.ReadFlashMessage(), 
+					PageHeader = domain.Title,
 					SiteName = domain.Title,
+					PageSubheader = domain.Description,
 					Title = "Categories - " + domain.Title,
-					CSSFilename = Program.Cache.DebuggingEnabled ?
-						"app.css?v=" + "wwwroot/css/app.css".GetCSSFileTimestamp() :
-						"app.min.css?v=" + "wwwroot/css/app.min.css".GetCSSFileTimestamp(), 
-					Header = domain.Title,
-					Subheader = domain.Description, 
-					FlashMessage = httpContext.ReadFlashMessage()
+					User = user
 				});
 
 				await body.WriteLogin(new
@@ -60,7 +58,7 @@ namespace M1nforum.Web.Handlers
 		public async Task Post(HttpContext httpContext)
 		{
 			// model
-			var domain = Program.Cache.Business.GetDomainFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
+			var domain = Program.Cache.Business.DomainGetFromHttpContext(httpContext) ?? throw new PageNotFoundException("domain");
 			var returnUrl = (string)httpContext.Request.Form["ReturnURL"] ?? "/";
 			var userIsLoggedIn = false;
 
@@ -90,7 +88,7 @@ namespace M1nforum.Web.Handlers
 
 			// todo:  csrf
 
-			var user = Program.Cache.Business.Login(domain.Id, username, password);
+			var user = Program.Cache.Business.LoginUser(domain.Id, username, password);
 
 			if (user == null)
 			{

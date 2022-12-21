@@ -13,6 +13,7 @@ using M1nforum.Web.Infrastructure.Exceptions;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Routing;
 
 namespace M1nforum.Web
 {
@@ -95,6 +96,9 @@ namespace M1nforum.Web
 			// error handler
 			app.Use(async (httpContext, next) =>
 			{
+				// temp debugging variable
+				var currentEndpoint = httpContext.GetEndpoint();
+				
 				try
 				{
 					await next(httpContext);
@@ -128,9 +132,26 @@ namespace M1nforum.Web
 			app.MapGet("/categories", async (httpContext) => await new Categories().Browse(httpContext));
 			app.MapGet("/categories/{categoryId}", async (HttpContext httpContext, ulong categoryId) => await new Topics().Get(httpContext, categoryId));
 			app.MapGet("/categories/{categoryId}/topics/{topicId}", async (HttpContext httpContext, ulong categoryId, ulong topicId) => await new Comments().Get(httpContext, categoryId, topicId));
+
+			// domains b
 			app.MapGet("/domains", async (HttpContext httpContext) => await new Domains().Browse(httpContext));
+
+			// domains b
+			app.MapGet("/domains/read/{domainId}", async (HttpContext httpContext, ulong domainId) => await new Domains().Read(httpContext, domainId));
+
+			// domains e
+			app.MapGet("/domains/edit/{domainId}", async (HttpContext httpContext, ulong domainId) => await new Domains().Edit(httpContext, domainId));
+			app.MapPost("/domains/edit/{domainId}", async (HttpContext httpContext, ulong domainId) => await new Domains().EditPost(httpContext, domainId));
+
+			// domains a
 			app.MapGet("/domains/add", async (HttpContext httpContext) => await new Domains().Add(httpContext));
 			app.MapPost("/domains/add", async (HttpContext httpContext) => await new Domains().AddPost(httpContext));
+
+			// domains d
+			app.MapGet("/domains/delete/{domainId}", async (HttpContext httpContext, ulong domainId) => await new Domains().Delete(httpContext, domainId));
+			app.MapPost("/domains/delete/{domainId}", async (HttpContext httpContext, ulong domainId) => await new Domains().DeletePost(httpContext, domainId));
+			app.MapPost("/domains/delete", async (HttpContext httpContext) => await new Domains().DeletePost(httpContext, 0));
+
 			app.MapGet("/login", async (HttpContext httpContext) => await new Login().Get(httpContext));
 			app.MapPost("/login", async (HttpContext httpContext) => await new Login().Post(httpContext));
 			app.Map("/logout", async (httpContext) => await new Logout().Get(httpContext));

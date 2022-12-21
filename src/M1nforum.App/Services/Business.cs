@@ -5,9 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using M1nforum.Web.Infrastructure;
 using System.Security.Claims;
-using System.Net.Http;
-using System.Reflection.Metadata.Ecma335;
-using System.Linq.Expressions;
+using M1nforum.Web.Infrastructure.Validation;
 
 namespace M1nforum.Web.Services
 {
@@ -24,7 +22,7 @@ namespace M1nforum.Web.Services
 		// todo:  all of these methods need validation
 		//
 
-		internal Domain GetDomainFromHttpContext(HttpContext httpContext)
+		internal Domain DomainGetFromHttpContext(HttpContext httpContext)
 		{
 			var host = httpContext
 				.Request
@@ -34,51 +32,51 @@ namespace M1nforum.Web.Services
 				.Split(":")
 				.First();
 
-			return _dataAccess.GetDomainByName(host);
+			return _dataAccess.DomainGetByName(host);
 		}
 
-		internal List<Domain> GetDomains(User user)
+		internal List<Domain> DomainsList(User user)
 		{
-			return (user != null && !user.IsBanned && user.IsAdmin) ?
-				_dataAccess.GetDomains() :
+			return UserIsAdmin(user) ?
+				_dataAccess.DomainsList() :
 				null;
 		}
 
-		internal List<Category> GetCategoriesByDomainId(ulong domainId)
+		internal List<Category> CategoriesGetByDomainId(ulong domainId)
 		{
-			return _dataAccess.GetCategoriesByDomainId(domainId);
+			return _dataAccess.CategoriesGetByDomainId(domainId);
 		}
 
-		internal Category GetCategoryById(ulong domainId, ulong categoryId)
+		internal Category CategoryGetById(ulong domainId, ulong categoryId)
 		{
-			return _dataAccess.GetCategoryById(domainId, categoryId);
+			return _dataAccess.CategoryGetById(domainId, categoryId);
 		}
 
-		internal List<Topic> GetTopicsByCategoryId(ulong domainId, ulong categoryId)
+		internal List<Topic> TopicsGetByCategoryId(ulong domainId, ulong categoryId)
 		{
-			return _dataAccess.GetTopicsByCategoryId(domainId, categoryId);
+			return _dataAccess.TopicsGetByCategoryId(domainId, categoryId);
 		}
 
-		internal Topic GetTopicById(ulong domainId, ulong categoryId, ulong topicId)
+		internal Topic TopicGetById(ulong domainId, ulong categoryId, ulong topicId)
 		{
-			return _dataAccess.GetTopicById(domainId, categoryId, topicId);
+			return _dataAccess.TopicGetById(domainId, categoryId, topicId);
 		}
 
-		internal Topic GetTopicByIdUpdateViewCount(ulong domainId, ulong categoryId, ulong topicId)
+		internal Topic TopicGetByIdUpdateViewCount(ulong domainId, ulong categoryId, ulong topicId)
 		{
-			return _dataAccess.GetTopicByIdUpdateViewCount(domainId, categoryId, topicId);
+			return _dataAccess.TopicGetByIdUpdateViewCount(domainId, categoryId, topicId);
 		}
 
-		internal List<Comment> GetCommentsByTopicId(ulong domainId, ulong categoryId, ulong topicId)
+		internal List<Comment> CommentsGetByTopicId(ulong domainId, ulong categoryId, ulong topicId)
 		{
-			return _dataAccess.GetCommentsByTopicId(domainId, categoryId, topicId);
+			return _dataAccess.CommentsGetByTopicId(domainId, categoryId, topicId);
 		}
 
-		internal User Login(ulong domainId, string username, string password)
+		internal User LoginUser(ulong domainId, string username, string password)
 		{
 			username = username.ToLower();
 
-			var user = _dataAccess.GetUserByUsername(domainId, username);
+			var user = _dataAccess.UserGetByUsername(domainId, username);
 
 			if (user == null)
 			{
@@ -95,7 +93,7 @@ namespace M1nforum.Web.Services
 			if (passwordsMatch)
 			{
 				user.PasswordFailedCount = 0;
-				user = _dataAccess.UpdateUser(domainId, user);
+				user = _dataAccess.UserUpdate(domainId, user);
 				return user;
 			}
 			else
@@ -105,19 +103,19 @@ namespace M1nforum.Web.Services
 				{
 					user.LockedUntil = DateTime.UtcNow.AddMinutes(30);
 				}
-				_dataAccess.UpdateUser(domainId, user);
+				_dataAccess.UserUpdate(domainId, user);
 				return null;
 			}
 		}
 
-		internal User GetUserByClaims(ulong domainId, ClaimsPrincipal claimsPrincipal)
+		internal User UserGetByClaims(ulong domainId, ClaimsPrincipal claimsPrincipal)
 		{
 			if (ulong.TryParse(claimsPrincipal.Claims
 				.Where(c => c.Type == "Id")
 				.Select(c => c.Value)
 				.FirstOrDefault(), out var userId))
 			{
-				return GetUserByid(domainId, userId);
+				return UserGetByid(domainId, userId);
 			}
 			else
 			{
@@ -125,17 +123,81 @@ namespace M1nforum.Web.Services
 			}
 		}
 
-		internal User GetUserByid(ulong domainId, ulong userId)
+		internal User UserGetByid(ulong domainId, ulong userId)
 		{
-			return _dataAccess.GetUserById(domainId, userId);
+			return _dataAccess.UserGetById(domainId, userId);
 		}
 
-		internal void InsertDomain(User user, Domain domain)
+		internal void DomainInsert(User user, Domain domain)
 		{
+			if (!UserIsAdmin(user))
+			{
+				throw new Exception("User is not an admin"); // todo:  better
+			}
+
 			domain.CreatedOn = domain.UpdatedOn = DateTime.UtcNow;
 			domain.CreatedBy = domain.UpdatedBy = user.Id.ToString(); // todo:  should this be a name?
 
-			_dataAccess.InsertDomain(domain);
+			_dataAccess.DomainInsert(domain);
+		}
+
+		internal Domain DomainGetById(User user, ulong domainId)
+		{
+			return UserIsAdmin(user) ?
+				_dataAccess.DomainGetByDomainId(domainId) :
+				null;
+		}
+
+		internal bool UserIsAdmin(User user)
+		{
+			return user != null && !user.IsBanned && user.IsAdmin;
+		}
+
+		internal void DomainUpdate(User user, Domain domain)
+		{
+			if (!UserIsAdmin(user))
+			{
+				throw new Exception("User is not an admin"); // todo:  better
+			}
+
+			var oldDomain = DomainGetById(user, domain.Id);
+
+			if (oldDomain == null)
+			{
+				throw new Exception("Domain does not exist."); // todo:  better
+			}
+
+			oldDomain.UpdatedBy = user.Id.ToString(); // todo:  should this be a name?
+			oldDomain.UpdatedOn= DateTime.UtcNow;
+			oldDomain.Description = domain.Description;
+			oldDomain.Name = domain.Name;
+			oldDomain.Title = domain.Title;
+
+			_dataAccess.DomainUpdate(domain);
+		}
+
+		internal void DomainDelete(User user, Domain domain)
+		{
+			if (!UserIsAdmin(user))
+			{
+				throw new Exception("User is not an admin"); // todo:  better
+			}
+
+			_dataAccess.DomainDelete(domain.Id);
+		}
+
+		internal List<ValidationException> DomainGetValidationExceptions(Domain domain)
+		{
+			var exceptions = new Validation()
+				.IsNotNull(domain.Title, nameof(domain.Title))
+				.IsLengthInRange(domain.Title, nameof(domain.Title), 1, 64)
+				.IsNotNull(domain.Name, nameof(domain.Name))
+				.IsLengthInRange(domain.Name, nameof(domain.Name), 5, 64)
+				.IsNotNull(domain.Description, nameof(domain.Description))
+				.IsLengthInRange(domain.Description, nameof(domain.Description), 0, 128)
+				.GetValidationExceptions();
+
+			return exceptions;
 		}
 	}
 }
